@@ -297,6 +297,219 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             </div>
           </div>
         );
+
+      case 'dashboard':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-4xl mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-white">Dashboard</h2>
+                <div className="flex space-x-2">
+                  <div className="w-8 h-8 bg-white/20 rounded-full"></div>
+                  <div className="w-8 h-8 bg-white/20 rounded-full"></div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-white">2.4k</div>
+                  <div className="text-white/60 text-sm">Users</div>
+                </div>
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-white">$12k</div>
+                  <div className="text-white/60 text-sm">Revenue</div>
+                </div>
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-white">98%</div>
+                  <div className="text-white/60 text-sm">Uptime</div>
+                </div>
+                <div className="bg-white/10 p-4 rounded-lg">
+                  <div className="text-2xl font-bold text-white">45</div>
+                  <div className="text-white/60 text-sm">Projects</div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="bg-white/5 p-4 rounded-lg">
+                  <h3 className="text-white font-medium mb-2">Recent Activity</h3>
+                  <div className="space-y-2">
+                    <div className="flex items-center text-sm text-white/80">
+                      <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                      User signed up
+                    </div>
+                    <div className="flex items-center text-sm text-white/80">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full mr-2"></div>
+                      Payment received
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white/5 p-4 rounded-lg">
+                  <h3 className="text-white font-medium mb-2">Quick Actions</h3>
+                  <div className="space-y-2">
+                    <button className="w-full text-left p-2 bg-white/10 rounded text-white/80 hover:bg-white/20 text-sm">
+                      Create Project
+                    </button>
+                    <button className="w-full text-left p-2 bg-white/10 rounded text-white/80 hover:bg-white/20 text-sm">
+                      View Reports
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'form':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-md mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <h3 className="text-lg font-semibold text-white mb-6">Contact Form</h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-white/80 text-sm mb-2">First Name</label>
+                    <input 
+                      type="text" 
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm"
+                      placeholder="John"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-white/80 text-sm mb-2">Last Name</label>
+                    <input 
+                      type="text" 
+                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm"
+                      placeholder="Doe"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-white/80 text-sm mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm"
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-white/80 text-sm mb-2">Message</label>
+                  <textarea 
+                    className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm h-20 resize-none"
+                    placeholder="Your message..."
+                  />
+                </div>
+                <button className="w-full py-3 bg-white/20 text-white rounded hover:bg-white/30 transition-colors font-medium">
+                  Send Message
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'grid':
+        return (
+          <div className="w-full max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2, 3, 4, 5, 6].map((item) => (
+                <div 
+                  key={item}
+                  style={liquidGlassStyle}
+                  className="h-48"
+                >
+                  <div style={getGradientOverlayStyle()}></div>
+                  <div className="relative z-10 p-4 h-full flex flex-col">
+                    <div className="w-12 h-12 bg-white/20 rounded-lg mb-4"></div>
+                    <h4 className="text-white font-medium mb-2">Card {item}</h4>
+                    <p className="text-white/80 text-sm flex-1">
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    </p>
+                    <button className="mt-4 px-4 py-2 bg-white/20 text-white rounded text-sm hover:bg-white/30 transition-colors">
+                      Learn More
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'hero':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-4xl mx-auto h-96"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10 h-full flex flex-col justify-center items-center text-center">
+              <h1 className="text-3xl lg:text-5xl font-bold text-white mb-6">
+                Welcome to the Future
+              </h1>
+              <p className="text-lg lg:text-xl text-white/80 mb-8 max-w-2xl leading-relaxed">
+                Experience the next generation of user interfaces with beautiful glassmorphism effects and modern design principles.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button className="px-8 py-3 bg-white/20 text-white rounded-lg font-medium hover:bg-white/30 transition-colors">
+                  Get Started
+                </button>
+                <button className="px-8 py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
+                  Learn More
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'feature':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-3xl mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <div className="text-center mb-8">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">Lightning Fast</h3>
+                <p className="text-white/80 leading-relaxed max-w-2xl mx-auto">
+                  Built with performance in mind, our glassmorphism effects are optimized for smooth animations and minimal impact on your application's performance.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-white/15 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-white text-xl">⚡</span>
+                  </div>
+                  <h4 className="text-white font-medium mb-2">Fast</h4>
+                  <p className="text-white/70 text-sm">Optimized performance</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-white/15 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-white text-xl">🎨</span>
+                  </div>
+                  <h4 className="text-white font-medium mb-2">Beautiful</h4>
+                  <p className="text-white/70 text-sm">Modern design</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-white/15 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                    <span className="text-white text-xl">🔧</span>
+                  </div>
+                  <h4 className="text-white font-medium mb-2">Flexible</h4>
+                  <p className="text-white/70 text-sm">Highly customizable</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
         
       default: // card
         return (

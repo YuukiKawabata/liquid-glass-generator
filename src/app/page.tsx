@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LiquidGlassConfig, OutputType, GeneratedCode } from '@/lib/types';
+import { LiquidGlassConfig, OutputType, GeneratedCode, Theme } from '@/lib/types';
 import { generateCode } from '@/lib/utils/generateCSS';
 import { defaultPresets } from '@/lib/utils/presets';
+import { defaultThemes, applyTheme, getThemeFromStorage, getThemeById } from '@/lib/utils/themes';
+import { saveCurrentConfig, getCurrentConfig, getUserPreferences } from '@/lib/utils/storage';
 import { ControlPanel } from '@/components/Editor/ControlPanel';
 import { PreviewArea } from '@/components/Editor/PreviewArea';
 import { CodeOutput } from '@/components/Editor/CodeOutput';
@@ -11,6 +13,7 @@ import { PanelResizer } from '@/components/ui/PanelResizer';
 
 export default function Home() {
   const [config, setConfig] = useState<LiquidGlassConfig>(defaultPresets[0].config);
+  const [currentTheme, setCurrentTheme] = useState<Theme>(defaultThemes[0]);
   const [outputType, setOutputType] = useState<OutputType>('css');
   const [generatedCode, setGeneratedCode] = useState<GeneratedCode | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -20,6 +23,33 @@ export default function Home() {
   // Panel widths state (only used on desktop)
   const [leftPanelWidth, setLeftPanelWidth] = useState(320);
   const [rightPanelWidth, setRightPanelWidth] = useState(384);
+
+  // Initialize app state
+  useEffect(() => {
+    // Load saved configuration
+    const savedConfig = getCurrentConfig();
+    if (savedConfig) {
+      setConfig(savedConfig);
+    }
+
+    // Load saved theme
+    const savedThemeId = getThemeFromStorage();
+    if (savedThemeId) {
+      const theme = getThemeById(savedThemeId);
+      if (theme) {
+        setCurrentTheme(theme);
+        applyTheme(theme);
+      }
+    } else {
+      applyTheme(defaultThemes[0]);
+    }
+
+    // Load user preferences
+    const preferences = getUserPreferences();
+    if (preferences.defaultOutputType) {
+      setOutputType(preferences.defaultOutputType as OutputType);
+    }
+  }, []);
 
   // Check screen size
   useEffect(() => {
@@ -32,6 +62,14 @@ export default function Home() {
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // Auto-save current configuration
+  useEffect(() => {
+    const preferences = getUserPreferences();
+    if (preferences.autoSave) {
+      saveCurrentConfig(config);
+    }
+  }, [config]);
 
   const handleConfigChange = (newConfig: Partial<LiquidGlassConfig>) => {
     console.log('Config change:', newConfig);
@@ -63,6 +101,11 @@ export default function Home() {
     if (isMobile) {
       setActivePanel('code');
     }
+  };
+
+  const handleThemeChange = (theme: Theme) => {
+    setCurrentTheme(theme);
+    applyTheme(theme);
   };
 
   const handleCopy = () => {
@@ -141,8 +184,10 @@ export default function Home() {
               config={config}
               outputType={outputType}
               isGenerating={isGenerating}
+              currentTheme={currentTheme}
               onConfigChange={handleConfigChange}
               onOutputTypeChange={setOutputType}
+              onThemeChange={handleThemeChange}
               onGenerate={handleGenerate}
             />
           </div>
@@ -199,8 +244,10 @@ export default function Home() {
             config={config}
             outputType={outputType}
             isGenerating={isGenerating}
+            currentTheme={currentTheme}
             onConfigChange={handleConfigChange}
             onOutputTypeChange={setOutputType}
+            onThemeChange={handleThemeChange}
             onGenerate={handleGenerate}
           />
         </div>

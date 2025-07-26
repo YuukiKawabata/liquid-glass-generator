@@ -1,17 +1,22 @@
 import React from 'react';
-import { LiquidGlassConfig, OutputType } from '@/lib/types';
+import { LiquidGlassConfig, OutputType, Theme } from '@/lib/types';
 import { defaultPresets } from '@/lib/utils/presets';
 import { Button } from '@/components/ui/Button';
 import { Slider } from '@/components/ui/Slider';
 import { ColorPicker } from '@/components/ui/ColorPicker';
 import { Select } from '@/components/ui/Select';
+import { AnimationControls } from '@/components/ui/AnimationControls';
+import { ThemeSelector } from '@/components/ui/ThemeSelector';
+import { ConfigManager } from '@/components/ui/ConfigManager';
 
 interface ControlPanelProps {
   config: LiquidGlassConfig;
   outputType: OutputType;
   isGenerating: boolean;
+  currentTheme: Theme;
   onConfigChange: (config: Partial<LiquidGlassConfig>) => void;
   onOutputTypeChange: (type: OutputType) => void;
+  onThemeChange: (theme: Theme) => void;
   onGenerate: () => void;
 }
 
@@ -19,8 +24,10 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   config,
   outputType,
   isGenerating,
+  currentTheme,
   onConfigChange,
   onOutputTypeChange,
+  onThemeChange,
   onGenerate,
 }) => {
   const handlePresetChange = (presetId: string) => {
@@ -40,6 +47,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { value: 'dropdown', label: 'Dropdown' },
     { value: 'toast', label: 'Toast' },
     { value: 'input', label: 'Input' },
+    { value: 'dashboard', label: 'Dashboard' },
+    { value: 'form', label: 'Form' },
+    { value: 'grid', label: 'Grid' },
+    { value: 'hero', label: 'Hero Section' },
+    { value: 'feature', label: 'Feature Section' },
   ];
 
   const outputOptions = [
@@ -47,6 +59,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { value: 'html', label: 'HTML' },
     { value: 'react', label: 'React' },
     { value: 'vue', label: 'Vue' },
+    { value: 'tailwind', label: 'Tailwind CSS' },
   ];
 
   const presetOptions = [
@@ -159,6 +172,25 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             onChange={(type) => onOutputTypeChange(type as OutputType)}
           />
         </div>
+
+        <AnimationControls
+          animation={config.animation}
+          onChange={(animation) => onConfigChange({ animation })}
+        />
+
+        <ThemeSelector
+          selectedTheme={currentTheme}
+          onThemeChange={onThemeChange}
+        />
+
+        <ConfigManager
+          currentConfig={config}
+          currentTheme={currentTheme}
+          onConfigLoad={(loadedConfig, loadedTheme) => {
+            onConfigChange(loadedConfig);
+            onThemeChange(loadedTheme);
+          }}
+        />
 
         <div className="pt-2">
           <Button
