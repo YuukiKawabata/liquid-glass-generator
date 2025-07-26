@@ -28,17 +28,17 @@ export const Slider: React.FC<SliderProps> = ({
   const percentage = ((value - min) / (max - min)) * 100;
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-3 ${className}`}>
       <div className="flex justify-between items-center">
         <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
           {label}
         </label>
-        <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">
+        <span className="text-sm text-gray-500 dark:text-gray-400 font-mono min-w-[3ch] text-right">
           {value}
         </span>
       </div>
       
-      <div className="relative">
+      <div className="relative py-2">
         <input
           type="range"
           min={min}
@@ -46,7 +46,7 @@ export const Slider: React.FC<SliderProps> = ({
           step={step}
           value={value}
           onChange={handleChange}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 slider"
+          className="w-full h-2 lg:h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 slider touch-manipulation"
           style={{
             background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${percentage}%, #e5e7eb ${percentage}%, #e5e7eb 100%)`,
           }}
@@ -56,23 +56,55 @@ export const Slider: React.FC<SliderProps> = ({
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
-          height: 20px;
-          width: 20px;
+          height: 24px;
+          width: 24px;
           border-radius: 50%;
           background: #3b82f6;
           cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 3px solid #ffffff;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transition: all 0.15s ease-in-out;
+        }
+        
+        .slider::-webkit-slider-thumb:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider::-webkit-slider-thumb:active {
+          transform: scale(1.2);
         }
         
         .slider::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
+          height: 24px;
+          width: 24px;
           border-radius: 50%;
           background: #3b82f6;
           cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 3px solid #ffffff;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transition: all 0.15s ease-in-out;
+        }
+        
+        .slider::-moz-range-thumb:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .slider::-moz-range-thumb:active {
+          transform: scale(1.2);
+        }
+        
+        @media (max-width: 1024px) {
+          .slider::-webkit-slider-thumb {
+            height: 28px;
+            width: 28px;
+          }
+          
+          .slider::-moz-range-thumb {
+            height: 28px;
+            width: 28px;
+          }
         }
       `}</style>
     </div>
