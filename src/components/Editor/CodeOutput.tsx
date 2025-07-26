@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GeneratedCode, OutputType, LiquidGlassConfig } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
+import { useI18n } from '@/lib/i18n/context';
 
 interface CodeOutputProps {
   generatedCode: GeneratedCode | null;
@@ -15,6 +16,7 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
   onCopy,
   config,
 }) => {
+  const { t } = useI18n();
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
@@ -77,7 +79,7 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
     <div className="h-full flex flex-col">
       <div className="flex justify-between items-center p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Code Output
+          {t.codeOutput}
         </h2>
         
         {generatedCode && (
@@ -96,7 +98,7 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span className="text-xs lg:text-sm">Download</span>
+              <span className="text-xs lg:text-sm">{t.download}</span>
             </Button>
 
             {/* Copy Button */}
@@ -111,14 +113,14 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
                   <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-xs lg:text-sm">Copied!</span>
+                  <span className="text-xs lg:text-sm">{t.copied}</span>
                 </>
               ) : (
                 <>
                   <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  <span className="text-xs lg:text-sm">Copy</span>
+                  <span className="text-xs lg:text-sm">{t.copy}</span>
                 </>
               )}
             </Button>
@@ -141,7 +143,7 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
               <svg className="w-10 lg:w-12 h-10 lg:h-12 mx-auto mb-3 lg:mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              <p className="text-sm">Generate code to see output</p>
+              <p className="text-sm">{t.generateCodeMessage}</p>
             </div>
           </div>
         )}

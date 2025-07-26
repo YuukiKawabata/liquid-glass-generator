@@ -1,4 +1,5 @@
 import React from 'react';
+import { useI18n } from '@/lib/i18n/context';
 
 interface ColorPickerProps {
   label: string;
@@ -13,6 +14,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   onChange,
   className = '',
 }) => {
+  const { t } = useI18n();
   // Convert rgba string to hex for color input
   const rgbaToHex = (rgba: string): string => {
     const match = rgba.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
@@ -67,7 +69,7 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
         
         <div className="flex-1">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">Transparency</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400">{t.transparency}</span>
             <span className="text-xs text-gray-500 dark:text-gray-400 font-mono min-w-[3ch] text-right">
               {Math.round(parseFloat(currentAlpha) * 100)}%
             </span>

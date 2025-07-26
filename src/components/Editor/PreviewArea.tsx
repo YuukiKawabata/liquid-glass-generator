@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LiquidGlassConfig } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
+import { useI18n } from '@/lib/i18n/context';
 
 interface PreviewAreaProps {
   config: LiquidGlassConfig;
 }
 
 export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
+  const { t } = useI18n();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -552,7 +554,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
     <div className="flex-1 flex flex-col">
       <div className="flex justify-between items-center p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
-          Preview
+          {t.previewTitle}
         </h2>
         
         <div className="flex items-center space-x-1 lg:space-x-2">
@@ -609,7 +611,10 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         {/* Hover instruction overlay */}
         {config.hoverEnabled && config.hoverEffect !== 'none' && (
           <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
-            {isCursorFollowEffect ? `Move cursor to see ${config.hoverEffect} effect` : `Hover to see ${config.hoverEffect} effect`}
+            {isCursorFollowEffect 
+              ? t.moveInstruction.replace('{effect}', config.hoverEffect)
+              : t.hoverInstruction.replace('{effect}', config.hoverEffect)
+            }
           </div>
         )}
       </div>

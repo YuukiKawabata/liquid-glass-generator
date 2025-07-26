@@ -22,6 +22,88 @@ export interface LiquidGlassConfig {
 
 export type OutputType = 'css' | 'html' | 'react' | 'vue' | 'typescript';
 
+// Language support types
+export type Language = 'ja' | 'en';
+
+export interface Messages {
+  // Control Panel
+  controlPanel: string;
+  preset: string;
+  custom: string;
+  componentType: string;
+  visualProperties: string;
+  blur: string;
+  opacity: string;
+  saturation: string;
+  borderRadius: string;
+  padding: string;
+  animationSettings: string;
+  enableAnimation: string;
+  animationType: string;
+  animationDuration: string;
+  animationDelay: string;
+  hoverEffects: string;
+  enableHoverEffects: string;
+  hoverEffect: string;
+  hoverIntensity: string;
+  hoverDuration: string;
+  colors: string;
+  backgroundColor: string;
+  borderColor: string;
+  output: string;
+  framework: string;
+  generateCode: string;
+  transparency: string;
+  
+  // Component types
+  card: string;
+  button: string;
+  modal: string;
+  panel: string;
+  navigation: string;
+  sidebar: string;
+  dropdown: string;
+  toast: string;
+  input: string;
+  
+  // Animation types
+  none: string;
+  float: string;
+  glow: string;
+  pulse: string;
+  shimmer: string;
+  bounce: string;
+  
+  // Hover effects
+  lift: string;
+  scale: string;
+  tilt: string;
+  rainbow: string;
+  brightness: string;
+  cursorFollow: string;
+  cursorGlow: string;
+  cursorTilt: string;
+  
+  // Preview Area
+  previewTitle: string;
+  hoverInstruction: string;
+  moveInstruction: string;
+  
+  // Code Output
+  codeOutput: string;
+  copy: string;
+  copied: string;
+  download: string;
+  
+  // Language
+  language: string;
+  japanese: string;
+  english: string;
+  
+  // No content state
+  generateCodeMessage: string;
+}
+
 export interface Preset {
   id: string;
   name: string;

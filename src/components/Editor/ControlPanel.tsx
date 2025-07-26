@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Slider } from '@/components/ui/Slider';
 import { ColorPicker } from '@/components/ui/ColorPicker';
 import { Select } from '@/components/ui/Select';
+import { useI18n } from '@/lib/i18n/context';
 
 interface ControlPanelProps {
   config: LiquidGlassConfig;
@@ -23,6 +24,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   onOutputTypeChange,
   onGenerate,
 }) => {
+  const { t } = useI18n();
+
   const handlePresetChange = (presetId: string) => {
     const preset = defaultPresets.find(p => p.id === presetId);
     if (preset) {
@@ -31,15 +34,15 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   };
 
   const typeOptions = [
-    { value: 'card', label: 'Card' },
-    { value: 'button', label: 'Button' },
-    { value: 'modal', label: 'Modal' },
-    { value: 'panel', label: 'Panel' },
-    { value: 'navigation', label: 'Navigation' },
-    { value: 'sidebar', label: 'Sidebar' },
-    { value: 'dropdown', label: 'Dropdown' },
-    { value: 'toast', label: 'Toast' },
-    { value: 'input', label: 'Input' },
+    { value: 'card', label: t.card },
+    { value: 'button', label: t.button },
+    { value: 'modal', label: t.modal },
+    { value: 'panel', label: t.panel },
+    { value: 'navigation', label: t.navigation },
+    { value: 'sidebar', label: t.sidebar },
+    { value: 'dropdown', label: t.dropdown },
+    { value: 'toast', label: t.toast },
+    { value: 'input', label: t.input },
   ];
 
   const outputOptions = [
@@ -51,7 +54,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   ];
 
   const presetOptions = [
-    { value: '', label: 'Custom' },
+    { value: '', label: t.custom },
     ...defaultPresets.map(preset => ({
       value: preset.id,
       label: preset.name,
@@ -63,19 +66,19 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
       <div className="space-y-4 lg:space-y-6">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Control Panel
+            {t.controlPanel}
           </h2>
         </div>
 
         <Select
-          label="Preset"
+          label={t.preset}
           value={config.presetId || ''}
           options={presetOptions}
           onChange={handlePresetChange}
         />
 
         <Select
-          label="Component Type"
+          label={t.componentType}
           value={config.type}
           options={typeOptions}
           onChange={(type) => onConfigChange({ type: type as LiquidGlassConfig['type'] })}
@@ -83,11 +86,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            Visual Properties
+            {t.visualProperties}
           </h3>
 
           <Slider
-            label="Blur"
+            label={t.blur}
             value={config.blur}
             min={0}
             max={50}
@@ -95,7 +98,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
 
           <Slider
-            label="Opacity"
+            label={t.opacity}
             value={config.opacity}
             min={0}
             max={1}
@@ -104,7 +107,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
 
           <Slider
-            label="Saturation"
+            label={t.saturation}
             value={config.saturation}
             min={50}
             max={300}
@@ -113,7 +116,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
 
           <Slider
-            label="Border Radius"
+            label={t.borderRadius}
             value={config.borderRadius}
             min={0}
             max={50}
@@ -121,7 +124,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
 
           <Slider
-            label="Padding"
+            label={t.padding}
             value={config.padding}
             min={0}
             max={60}
@@ -131,7 +134,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            Animation Settings
+            {t.animationSettings}
           </h3>
 
           <div className="flex items-center space-x-2">
@@ -143,28 +146,28 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <label htmlFor="animation-enabled" className="text-sm text-gray-700 dark:text-gray-300">
-              Enable Animation
+              {t.enableAnimation}
             </label>
           </div>
 
           {config.animationEnabled && (
             <>
               <Select
-                label="Animation Type"
+                label={t.animationType}
                 value={config.animationType}
                 options={[
-                  { value: 'none', label: 'None' },
-                  { value: 'float', label: '🕸️ Float' },
-                  { value: 'glow', label: '✨ Glow' },
-                  { value: 'pulse', label: '💗 Pulse' },
-                  { value: 'shimmer', label: '🌟 Shimmer' },
-                  { value: 'bounce', label: '⚡ Bounce' },
+                  { value: 'none', label: t.none },
+                  { value: 'float', label: t.float },
+                  { value: 'glow', label: t.glow },
+                  { value: 'pulse', label: t.pulse },
+                  { value: 'shimmer', label: t.shimmer },
+                  { value: 'bounce', label: t.bounce },
                 ]}
                 onChange={(animationType) => onConfigChange({ animationType: animationType as LiquidGlassConfig['animationType'] })}
               />
 
               <Slider
-                label="Animation Duration (seconds)"
+                label={t.animationDuration}
                 value={config.animationDuration}
                 min={0.5}
                 max={5}
@@ -173,7 +176,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               />
 
               <Slider
-                label="Animation Delay (seconds)"
+                label={t.animationDelay}
                 value={config.animationDelay}
                 min={0}
                 max={3}
@@ -186,7 +189,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            Hover Effects
+            {t.hoverEffects}
           </h3>
 
           <div className="flex items-center space-x-2">
@@ -198,33 +201,33 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
             />
             <label htmlFor="hover-enabled" className="text-sm text-gray-700 dark:text-gray-300">
-              Enable Hover Effects
+              {t.enableHoverEffects}
             </label>
           </div>
 
           {config.hoverEnabled && (
             <>
               <Select
-                label="Hover Effect"
+                label={t.hoverEffect}
                 value={config.hoverEffect}
                 options={[
-                  { value: 'none', label: 'None' },
-                  { value: 'lift', label: '⬆️ Lift' },
-                  { value: 'glow', label: '✨ Glow' },
-                  { value: 'blur', label: '🌫️ Blur' },
-                  { value: 'brightness', label: '☀️ Brightness' },
-                  { value: 'scale', label: '🔍 Scale' },
-                  { value: 'tilt', label: '🎭 Tilt' },
-                  { value: 'rainbow', label: '🌈 Rainbow' },
-                  { value: 'cursor-follow', label: '🖱️ Cursor Follow' },
-                  { value: 'cursor-glow', label: '💫 Cursor Glow' },
-                  { value: 'cursor-tilt', label: '🎯 Cursor Tilt' },
+                  { value: 'none', label: t.none },
+                  { value: 'lift', label: t.lift },
+                  { value: 'glow', label: t.glow },
+                  { value: 'blur', label: t.blur },
+                  { value: 'brightness', label: t.brightness },
+                  { value: 'scale', label: t.scale },
+                  { value: 'tilt', label: t.tilt },
+                  { value: 'rainbow', label: t.rainbow },
+                  { value: 'cursor-follow', label: t.cursorFollow },
+                  { value: 'cursor-glow', label: t.cursorGlow },
+                  { value: 'cursor-tilt', label: t.cursorTilt },
                 ]}
                 onChange={(hoverEffect) => onConfigChange({ hoverEffect: hoverEffect as LiquidGlassConfig['hoverEffect'] })}
               />
 
               <Slider
-                label="Hover Intensity"
+                label={t.hoverIntensity}
                 value={config.hoverIntensity}
                 min={0.1}
                 max={2.0}
@@ -233,7 +236,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
               />
 
               <Slider
-                label="Hover Duration (seconds)"
+                label={t.hoverDuration}
                 value={config.hoverDuration}
                 min={0.1}
                 max={1.0}
@@ -246,17 +249,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            Colors
+            {t.colors}
           </h3>
 
           <ColorPicker
-            label="Background Color"
+            label={t.backgroundColor}
             value={config.backgroundColor}
             onChange={(backgroundColor) => onConfigChange({ backgroundColor })}
           />
 
           <ColorPicker
-            label="Border Color"
+            label={t.borderColor}
             value={config.borderColor}
             onChange={(borderColor) => onConfigChange({ borderColor })}
           />
@@ -264,18 +267,18 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
 
         <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            Output
+            {t.output}
           </h3>
 
           <Select
-            label="Framework"
+            label={t.framework}
             value={outputType}
             options={outputOptions}
             onChange={(type) => onOutputTypeChange(type as OutputType)}
           />
         </div>
 
-        <div className="pt-2 pb-2">
+        <div className="pt-2 pb-6">
           <Button
             onClick={onGenerate}
             loading={isGenerating}
@@ -283,7 +286,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             fullWidth
             className="py-3 lg:py-2"
           >
-            Generate Code
+            {t.generateCode}
           </Button>
         </div>
       </div>
