@@ -47,6 +47,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { value: 'html', label: 'HTML' },
     { value: 'react', label: 'React' },
     { value: 'vue', label: 'Vue' },
+    { value: 'typescript', label: 'TypeScript' },
   ];
 
   const presetOptions = [
@@ -124,9 +125,123 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             value={config.padding}
             min={0}
             max={60}
-            step={4}
             onChange={(padding) => onConfigChange({ padding })}
           />
+        </div>
+
+        <div className="space-y-4 lg:space-y-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
+            Animation Settings
+          </h3>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="animation-enabled"
+              checked={config.animationEnabled}
+              onChange={(e) => onConfigChange({ animationEnabled: e.target.checked })}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <label htmlFor="animation-enabled" className="text-sm text-gray-700 dark:text-gray-300">
+              Enable Animation
+            </label>
+          </div>
+
+          {config.animationEnabled && (
+            <>
+              <Select
+                label="Animation Type"
+                value={config.animationType}
+                options={[
+                  { value: 'none', label: 'None' },
+                  { value: 'float', label: '🕸️ Float' },
+                  { value: 'glow', label: '✨ Glow' },
+                  { value: 'pulse', label: '💗 Pulse' },
+                  { value: 'shimmer', label: '🌟 Shimmer' },
+                  { value: 'bounce', label: '⚡ Bounce' },
+                ]}
+                onChange={(animationType) => onConfigChange({ animationType: animationType as LiquidGlassConfig['animationType'] })}
+              />
+
+              <Slider
+                label="Animation Duration (seconds)"
+                value={config.animationDuration}
+                min={0.5}
+                max={5}
+                step={0.1}
+                onChange={(animationDuration) => onConfigChange({ animationDuration })}
+              />
+
+              <Slider
+                label="Animation Delay (seconds)"
+                value={config.animationDelay}
+                min={0}
+                max={3}
+                step={0.1}
+                onChange={(animationDelay) => onConfigChange({ animationDelay })}
+              />
+            </>
+          )}
+        </div>
+
+        <div className="space-y-4 lg:space-y-4">
+          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
+            Hover Effects
+          </h3>
+
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="hover-enabled"
+              checked={config.hoverEnabled}
+              onChange={(e) => onConfigChange({ hoverEnabled: e.target.checked })}
+              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+            <label htmlFor="hover-enabled" className="text-sm text-gray-700 dark:text-gray-300">
+              Enable Hover Effects
+            </label>
+          </div>
+
+          {config.hoverEnabled && (
+            <>
+              <Select
+                label="Hover Effect"
+                value={config.hoverEffect}
+                options={[
+                  { value: 'none', label: 'None' },
+                  { value: 'lift', label: '⬆️ Lift' },
+                  { value: 'glow', label: '✨ Glow' },
+                  { value: 'blur', label: '🌫️ Blur' },
+                  { value: 'brightness', label: '☀️ Brightness' },
+                  { value: 'scale', label: '🔍 Scale' },
+                  { value: 'tilt', label: '🎭 Tilt' },
+                  { value: 'rainbow', label: '🌈 Rainbow' },
+                  { value: 'cursor-follow', label: '🖱️ Cursor Follow' },
+                  { value: 'cursor-glow', label: '💫 Cursor Glow' },
+                  { value: 'cursor-tilt', label: '🎯 Cursor Tilt' },
+                ]}
+                onChange={(hoverEffect) => onConfigChange({ hoverEffect: hoverEffect as LiquidGlassConfig['hoverEffect'] })}
+              />
+
+              <Slider
+                label="Hover Intensity"
+                value={config.hoverIntensity}
+                min={0.1}
+                max={2.0}
+                step={0.1}
+                onChange={(hoverIntensity) => onConfigChange({ hoverIntensity })}
+              />
+
+              <Slider
+                label="Hover Duration (seconds)"
+                value={config.hoverDuration}
+                min={0.1}
+                max={1.0}
+                step={0.05}
+                onChange={(hoverDuration) => onConfigChange({ hoverDuration })}
+              />
+            </>
+          )}
         </div>
 
         <div className="space-y-4 lg:space-y-4">
@@ -160,7 +275,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
         </div>
 
-        <div className="pt-2">
+        <div className="pt-2 pb-2">
           <Button
             onClick={onGenerate}
             loading={isGenerating}

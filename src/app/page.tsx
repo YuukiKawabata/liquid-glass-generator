@@ -160,6 +160,7 @@ export default function Home() {
               generatedCode={generatedCode}
               outputType={outputType}
               onCopy={handleCopy}
+              config={config}
             />
           </div>
         )}

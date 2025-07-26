@@ -9,16 +9,269 @@ export function generateCSS(config: LiquidGlassConfig): string {
     backgroundColor,
     borderColor,
     padding,
+    animationEnabled,
+    animationType,
+    animationDuration,
+    animationDelay,
+    hoverEnabled,
+    hoverEffect,
+    hoverIntensity,
+    hoverDuration,
   } = config;
 
   // Parse the backgroundColor to extract RGB values and apply opacity
   const parseRgbaWithOpacity = (color: string, opacityValue: number) => {
-    const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-    if (match) {
-      return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${opacityValue})`;
+    // Check if it's already an rgba/rgb color
+    const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (rgbaMatch) {
+      return `rgba(${rgbaMatch[1]}, ${rgbaMatch[2]}, ${rgbaMatch[3]}, ${opacityValue})`;
     }
-    // Fallback for hex colors or other formats
+    
+    // Check if it's a hex color
+    const hexMatch = color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+    if (hexMatch) {
+      const r = parseInt(hexMatch[1], 16);
+      const g = parseInt(hexMatch[2], 16);
+      const b = parseInt(hexMatch[3], 16);
+      return `rgba(${r}, ${g}, ${b}, ${opacityValue})`;
+    }
+    
+    // Fallback for other formats
     return `rgba(255, 255, 255, ${opacityValue})`;
+  };
+
+  const getHoverCSS = () => {
+    if (!hoverEnabled || hoverEffect === 'none') return '';
+
+    const transition = `transition: all ${hoverDuration}s ease;`;
+
+    const hoverEffects = {
+      lift: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  transform: translateY(-${hoverIntensity * 8}px);
+  box-shadow: 
+    0 ${8 + hoverIntensity * 12}px ${32 + hoverIntensity * 20}px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}`,
+      glow: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 ${hoverIntensity * 20}px rgba(255, 255, 255, ${hoverIntensity * 0.4});
+}`,
+      blur: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  backdrop-filter: blur(${blur * hoverIntensity}px) saturate(${saturation}%);
+  -webkit-backdrop-filter: blur(${blur * hoverIntensity}px) saturate(${saturation}%);
+}`,
+      brightness: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  background: ${parseRgbaWithOpacity(backgroundColor, Math.min(opacity * hoverIntensity, 1))};
+  border-color: ${borderColor.replace(/[\d.]+\)$/, `${hoverIntensity * 0.5})`)};
+}`,
+      scale: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  transform: scale(${hoverIntensity});
+}`,
+      tilt: `
+.liquid-glass {
+  ${transition}
+  transform-style: preserve-3d;
+}
+
+.liquid-glass:hover {
+  transform: perspective(1000px) rotateX(${hoverIntensity * 5}deg) rotateY(${hoverIntensity * 5}deg);
+}`,
+      rainbow: `
+.liquid-glass {
+  ${transition}
+}
+
+.liquid-glass:hover {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 0, 150, ${opacity * hoverIntensity * 0.3}) 0%,
+    rgba(0, 204, 255, ${opacity * hoverIntensity * 0.3}) 25%,
+    rgba(255, 204, 0, ${opacity * hoverIntensity * 0.3}) 50%,
+    rgba(255, 0, 150, ${opacity * hoverIntensity * 0.3}) 75%,
+    rgba(0, 204, 255, ${opacity * hoverIntensity * 0.3}) 100%
+  );
+  background-size: 400% 400%;
+  animation: liquid-glass-rainbow-shift ${hoverDuration * 2}s ease infinite;
+}
+
+@keyframes liquid-glass-rainbow-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}`,
+      'cursor-follow': `
+.liquid-glass {
+  ${transition}
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::after {
+  content: '';
+  position: absolute;
+  top: var(--cursor-y, 50%);
+  left: var(--cursor-x, 50%);
+  width: ${hoverIntensity * 100}px;
+  height: ${hoverIntensity * 100}px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, ${hoverIntensity * 0.3}) 0%,
+    rgba(255, 255, 255, ${hoverIntensity * 0.1}) 50%,
+    transparent 100%
+  );
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity ${hoverDuration}s ease;
+}
+
+.liquid-glass:hover::after {
+  opacity: 1;
+}`,
+      'cursor-glow': `
+.liquid-glass {
+  ${transition}
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  top: var(--cursor-y, 50%);
+  left: var(--cursor-x, 50%);
+  width: ${hoverIntensity * 150}px;
+  height: ${hoverIntensity * 150}px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, ${hoverIntensity * 0.4}) 0%,
+    rgba(100, 200, 255, ${hoverIntensity * 0.2}) 30%,
+    rgba(255, 100, 200, ${hoverIntensity * 0.1}) 60%,
+    transparent 100%
+  );
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity ${hoverDuration}s ease;
+  filter: blur(${hoverIntensity * 2}px);
+  animation: liquid-glass-cursor-glow ${hoverDuration * 4}s ease-in-out infinite;
+}
+
+.liquid-glass:hover::before {
+  opacity: 1;
+}
+
+@keyframes liquid-glass-cursor-glow {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(1);
+    filter: blur(${hoverIntensity * 2}px) brightness(1);
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.1);
+    filter: blur(${hoverIntensity * 3}px) brightness(1.3);
+  }
+}`,
+      'cursor-tilt': `
+.liquid-glass {
+  ${transition}
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.liquid-glass:hover {
+  transform: 
+    perspective(1000px)
+    rotateX(calc((var(--cursor-y, 50) - 50) * ${hoverIntensity * 0.3}deg))
+    rotateY(calc((var(--cursor-x, 50) - 50) * ${hoverIntensity * 0.3}deg))
+    translateZ(${hoverIntensity * 10}px);
+}`,
+    };
+
+    return hoverEffects[hoverEffect] || '';
+  };
+
+  const getAnimationCSS = () => {
+    if (!animationEnabled || animationType === 'none') return '';
+
+    const animationProperty = `animation: liquid-glass-${animationType} ${animationDuration}s ease-in-out ${animationDelay}s infinite;`;
+
+    const keyframes = {
+      float: `
+@keyframes liquid-glass-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}`,
+      glow: `
+@keyframes liquid-glass-glow {
+  0%, 100% { box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(255, 255, 255, 0.3); }
+}`,
+      pulse: `
+@keyframes liquid-glass-pulse {
+  0%, 100% { transform: scale(1); opacity: ${opacity}; }
+  50% { transform: scale(1.05); opacity: ${Math.min(opacity + 0.1, 1)}; }
+}`,
+      shimmer: `
+@keyframes liquid-glass-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}`,
+      bounce: `
+@keyframes liquid-glass-bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}`,
+    };
+
+    return `
+${keyframes[animationType] || ''}
+
+.liquid-glass {
+  ${animationProperty}
+  ${animationType === 'shimmer' ? `
+  background: linear-gradient(
+    90deg,
+    ${parseRgbaWithOpacity(backgroundColor, opacity)} 25%,
+    ${parseRgbaWithOpacity(backgroundColor, Math.min(opacity + 0.1, 1))} 50%,
+    ${parseRgbaWithOpacity(backgroundColor, opacity)} 75%
+  );
+  background-size: 200% 100%;` : ''}
+}`;
   };
 
   const baseCSS = `
@@ -53,8 +306,10 @@ export function generateCSS(config: LiquidGlassConfig): string {
 
   // Add component-specific styles
   const componentSpecificCSS = getComponentSpecificCSS(config.type);
+  const animationCSS = getAnimationCSS();
+  const hoverCSS = getHoverCSS();
   
-  return `${baseCSS}${componentSpecificCSS}`.trim();
+  return `${baseCSS}${componentSpecificCSS}${animationCSS}${hoverCSS}`.trim();
 }
 
 function getComponentSpecificCSS(type: string): string {
@@ -1210,6 +1465,8 @@ export function generateCode(config: LiquidGlassConfig, outputType: OutputType):
       return generateReact(config);
     case 'vue':
       return generateVue(config);
+    case 'typescript':
+      return generateTypeScript(config);
     default:
       return generateCSS(config);
   }
@@ -1303,4 +1560,328 @@ withDefaults(defineProps<Props>(), {
 });
 </script>`;
   }
+}
+
+export function generateTypeScript(config: LiquidGlassConfig): string {
+  const componentName = `LiquidGlass${config.type.charAt(0).toUpperCase() + config.type.slice(1)}`;
+  
+  const getTypeDefinitions = () => {
+    switch (config.type) {
+      case 'button':
+        return `
+/**
+ * Props for the ${componentName} component
+ */
+export interface ${componentName}Props {
+  /** Content to display inside the button */
+  children?: React.ReactNode;
+  /** Click event handler */
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  /** Additional CSS class names */
+  className?: string;
+  /** Whether the button is disabled */
+  disabled?: boolean;
+  /** Button size variant */
+  size?: 'sm' | 'md' | 'lg';
+  /** Button type */
+  type?: 'button' | 'submit' | 'reset';
+}`;
+
+      case 'modal':
+        return `
+/**
+ * Props for the ${componentName} component
+ */
+export interface ${componentName}Props {
+  /** Modal title */
+  title?: string;
+  /** Modal content */
+  children?: React.ReactNode;
+  /** Whether the modal is open */
+  isOpen: boolean;
+  /** Close event handler */
+  onClose?: () => void;
+  /** Confirm event handler */
+  onConfirm?: () => void;
+  /** Additional CSS class names */
+  className?: string;
+  /** Whether to show the close button */
+  showCloseButton?: boolean;
+  /** Whether to show action buttons */
+  showActions?: boolean;
+}`;
+
+      case 'input':
+        return `
+/**
+ * Form field configuration
+ */
+export interface FormField {
+  /** Field name/id */
+  name: string;
+  /** Input type */
+  type: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url';
+  /** Field label */
+  label: string;
+  /** Placeholder text */
+  placeholder: string;
+  /** Whether the field is required */
+  required?: boolean;
+  /** Field validation pattern */
+  pattern?: string;
+}
+
+/**
+ * Props for the ${componentName} component
+ */
+export interface ${componentName}Props {
+  /** Form fields configuration */
+  fields?: FormField[];
+  /** Form submission handler */
+  onSubmit?: (data: Record<string, string>) => void;
+  /** Submit button label */
+  submitLabel?: string;
+  /** Additional CSS class names */
+  className?: string;
+  /** Whether the form is loading */
+  isLoading?: boolean;
+}`;
+
+      default:
+        return `
+/**
+ * Props for the ${componentName} component
+ */
+export interface ${componentName}Props {
+  /** Component title */
+  title?: string;
+  /** Component content */
+  children?: React.ReactNode;
+  /** Additional CSS class names */
+  className?: string;
+}`;
+    }
+  };
+
+  const getUsageExample = () => {
+    switch (config.type) {
+      case 'button':
+        return `
+// Usage Example:
+import { ${componentName} } from './components/LiquidGlass';
+
+function App() {
+  const handleClick = () => {
+    console.log('Button clicked!');
+  };
+
+  return (
+    <${componentName} 
+      onClick={handleClick}
+      size="md"
+      className="my-custom-class"
+    >
+      Click me!
+    </${componentName}>
+  );
+}`;
+
+      case 'modal':
+        return `
+// Usage Example:
+import { useState } from 'react';
+import { ${componentName} } from './components/LiquidGlass';
+
+function App() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      <${componentName} 
+        isOpen={isOpen}
+        title="Confirm Action"
+        onClose={() => setIsOpen(false)}
+        onConfirm={() => {
+          console.log('Confirmed!');
+          setIsOpen(false);
+        }}
+      >
+        Are you sure you want to continue?
+      </${componentName}>
+    </>
+  );
+}`;
+
+      case 'input':
+        return `
+// Usage Example:
+import { ${componentName} } from './components/LiquidGlass';
+
+function App() {
+  const fields = [
+    { name: 'email', type: 'email', label: 'Email', placeholder: 'Enter your email' },
+    { name: 'password', type: 'password', label: 'Password', placeholder: 'Enter your password' }
+  ];
+
+  const handleSubmit = (data: Record<string, string>) => {
+    console.log('Form data:', data);
+  };
+
+  return (
+    <${componentName} 
+      fields={fields}
+      onSubmit={handleSubmit}
+      submitLabel="Sign In"
+    />
+  );
+}`;
+
+      default:
+        return `
+// Usage Example:
+import { ${componentName} } from './components/LiquidGlass';
+
+function App() {
+  return (
+    <${componentName} title="Welcome">
+      This is a beautiful liquid glass component!
+    </${componentName}>
+  );
+}`;
+    }
+  };
+
+  return `
+/**
+ * 🌟 Liquid Glass ${config.type.charAt(0).toUpperCase() + config.type.slice(1)} Component
+ * 
+ * A beautiful glassmorphism component with advanced backdrop filters.
+ * 
+ * Features:
+ * ✨ Modern glassmorphism design
+ * 🎨 Customizable blur and opacity
+ * 📱 Responsive design
+ * ♿ Accessibility compliant
+ * ${config.animationEnabled ? `🎭 Animated with ${config.animationType} effect` : '🎯 Static design'}
+ * ${config.hoverEnabled ? `🖱️ Interactive hover effects (${config.hoverEffect})` : ''}
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? '🎯 Advanced cursor tracking' : ''}
+ * 
+ * Configuration:
+ * - Blur: ${config.blur}px
+ * - Opacity: ${config.opacity}
+ * - Saturation: ${config.saturation}%
+ * - Border Radius: ${config.borderRadius}px
+ * - Padding: ${config.padding}px
+ * ${config.animationEnabled ? `- Animation: ${config.animationType} (${config.animationDuration}s duration, ${config.animationDelay}s delay)` : ''}
+ * ${config.hoverEnabled ? `- Hover Effect: ${config.hoverEffect} (intensity: ${config.hoverIntensity}, duration: ${config.hoverDuration}s)` : ''}
+ * 
+ * Generated at: ${new Date().toISOString()}
+ */
+
+import React from 'react';
+
+${getTypeDefinitions()}
+
+/**
+ * CSS Custom Properties (CSS Variables)
+ * Add these to your root CSS for easy theming:
+ */
+/*
+:root {
+  --liquid-glass-blur: ${config.blur}px;
+  --liquid-glass-opacity: ${config.opacity};
+  --liquid-glass-saturation: ${config.saturation}%;
+  --liquid-glass-border-radius: ${config.borderRadius}px;
+  --liquid-glass-padding: ${config.padding}px;
+  --liquid-glass-bg: ${config.backgroundColor};
+  --liquid-glass-border: ${config.borderColor};
+  ${config.animationEnabled ? `--liquid-glass-animation-duration: ${config.animationDuration}s;` : ''}
+  ${config.hoverEnabled ? `--liquid-glass-hover-duration: ${config.hoverDuration}s;` : ''}
+  ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? `
+  /* Cursor tracking variables (dynamically set by JavaScript) */
+  --cursor-x: 50%;
+  --cursor-y: 50%;` : ''}
+}
+*/
+
+${getUsageExample()}
+
+/**
+ * Installation & Setup:
+ * 
+ * 1. Install dependencies:
+ *    npm install react @types/react
+ * 
+ * 2. Add the CSS (see generated CSS tab)
+ * 
+ * 3. Import and use the component:
+ *    import { ${componentName} } from './components/LiquidGlass';
+ * 
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? `
+ * 4. Cursor Tracking Setup (for ${config.hoverEffect} effect):
+ *    Add mouse event listeners to track cursor position:
+ *    \`\`\`typescript
+ *    const handleMouseMove = (e: MouseEvent) => {
+ *      const rect = element.getBoundingClientRect();
+ *      const x = ((e.clientX - rect.left) / rect.width) * 100;
+ *      const y = ((e.clientY - rect.top) / rect.height) * 100;
+ *      ${config.hoverEffect === 'cursor-tilt' ? `// For cursor-tilt, use numeric values without units
+ *      element.style.setProperty('--cursor-x', Math.max(0, Math.min(100, x)).toString());
+ *      element.style.setProperty('--cursor-y', Math.max(0, Math.min(100, y)).toString());` : `// For other cursor effects, use percentage values
+ *      element.style.setProperty('--cursor-x', \`\${x}%\`);
+ *      element.style.setProperty('--cursor-y', \`\${y}%\`);`}
+ *    };
+ *    element.addEventListener('mousemove', handleMouseMove);
+ *    \`\`\`
+ * ` : ''}
+ * 
+ * Browser Support:
+ * ✅ Chrome 76+
+ * ✅ Firefox 103+
+ * ✅ Safari 9+
+ * ✅ Edge 79+
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? '✅ CSS Custom Properties support required for cursor tracking' : ''}
+ * 
+ * Performance Notes:
+ * - backdrop-filter is GPU accelerated
+ * - Use transform3d(0,0,0) to force hardware acceleration if needed
+ * - Consider reducing blur on lower-end devices
+ * ${config.hoverEnabled ? '- Hover effects use CSS transitions for smooth performance' : ''}
+ * ${config.animationEnabled ? '- Animations are optimized for 60fps performance' : ''}
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? '- Cursor tracking uses requestAnimationFrame for smooth updates' : ''}
+ */
+
+${getReactComponent(config.type)}
+
+export default ${componentName};
+
+/**
+ * Accessibility Features:
+ * - ARIA attributes included
+ * - Keyboard navigation support
+ * - Focus management
+ * - Screen reader compatibility
+ * ${config.hoverEnabled ? '- Hover effects respect prefers-reduced-motion' : ''}
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? '- Cursor effects are purely visual and don\'t affect keyboard navigation' : ''}
+ * 
+ * Customization:
+ * You can override the default styles by:
+ * 1. Using CSS custom properties (variables)
+ * 2. Passing custom className prop
+ * 3. Modifying the CSS directly
+ * ${config.hoverEnabled ? '4. Customizing hover effects via CSS' : ''}
+ * ${config.animationEnabled ? '4. Adjusting animation parameters' : ''}
+ * ${config.hoverEffect === 'cursor-follow' || config.hoverEffect === 'cursor-glow' || config.hoverEffect === 'cursor-tilt' ? '5. Fine-tuning cursor tracking sensitivity' : ''}
+ */`.trim();
+}
+
+export function getOutputOptions() {
+  return [
+    { value: 'css', label: 'CSS' },
+    { value: 'html', label: 'HTML' },
+    { value: 'react', label: 'React' },
+    { value: 'vue', label: 'Vue' },
+    { value: 'typescript', label: 'TypeScript' },
+  ];
 }

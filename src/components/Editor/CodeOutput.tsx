@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { GeneratedCode, OutputType } from '@/lib/types';
+import { GeneratedCode, OutputType, LiquidGlassConfig } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 
 interface CodeOutputProps {
   generatedCode: GeneratedCode | null;
   outputType: OutputType;
   onCopy: () => void;
+  config?: LiquidGlassConfig;
 }
 
 export const CodeOutput: React.FC<CodeOutputProps> = ({
   generatedCode,
   outputType,
   onCopy,
+  config,
 }) => {
   const [copied, setCopied] = useState(false);
 
@@ -28,6 +30,33 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
     }
   };
 
+  const downloadAsFile = () => {
+    if (!generatedCode?.code) return;
+
+    const getFileExtension = () => {
+      switch (outputType) {
+        case 'html': return 'html';
+        case 'css': return 'css';
+        case 'react':
+        case 'typescript': return 'tsx';
+        case 'vue': return 'vue';
+        default: return 'txt';
+      }
+    };
+
+    const fileName = `liquid-glass-${config?.type || 'component'}.${getFileExtension()}`;
+    const blob = new Blob([generatedCode.code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   const getLanguageForHighlighting = () => {
     switch (outputType) {
       case 'css':
@@ -35,6 +64,7 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
       case 'html':
         return 'html';
       case 'react':
+      case 'typescript':
         return 'typescript';
       case 'vue':
         return 'vue';
@@ -55,6 +85,21 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
             <span className="text-xs text-gray-500 uppercase tracking-wide">
               {outputType}
             </span>
+            
+            {/* Download Button */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={downloadAsFile}
+              className="min-h-[36px] px-2 lg:px-3 touch-manipulation"
+            >
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="text-xs lg:text-sm">Download</span>
+            </Button>
+
+            {/* Copy Button */}
             <Button
               variant="ghost"
               size="sm"

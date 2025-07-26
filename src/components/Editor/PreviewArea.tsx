@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { LiquidGlassConfig } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
 
@@ -8,6 +8,211 @@ interface PreviewAreaProps {
 
 export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Handle cursor tracking for cursor-follow effects
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      
+      // Update CSS variables for cursor position
+      if (config.hoverEffect === 'cursor-tilt') {
+        // For cursor-tilt, we need values that can be used in calc() for rotation
+        containerRef.current.style.setProperty('--cursor-x', `${Math.max(0, Math.min(100, x))}`);
+        containerRef.current.style.setProperty('--cursor-y', `${Math.max(0, Math.min(100, y))}`);
+      } else {
+        // For other cursor effects, use percentage values
+        containerRef.current.style.setProperty('--cursor-x', `${Math.max(0, Math.min(100, x))}%`);
+        containerRef.current.style.setProperty('--cursor-y', `${Math.max(0, Math.min(100, y))}%`);
+      }
+    };
+
+    const container = containerRef.current;
+    if (container && config.hoverEnabled && 
+        (config.hoverEffect === 'cursor-follow' || 
+         config.hoverEffect === 'cursor-glow' || 
+         config.hoverEffect === 'cursor-tilt')) {
+      container.addEventListener('mousemove', handleMouseMove);
+      container.addEventListener('mouseleave', () => {
+        if (config.hoverEffect === 'cursor-tilt') {
+          container.style.setProperty('--cursor-x', '50');
+          container.style.setProperty('--cursor-y', '50');
+        } else {
+          container.style.setProperty('--cursor-x', '50%');
+          container.style.setProperty('--cursor-y', '50%');
+        }
+      });
+      
+      return () => {
+        container.removeEventListener('mousemove', handleMouseMove);
+      };
+    }
+  }, [config.hoverEnabled, config.hoverEffect]);
+  
+  // Generate dynamic CSS for hover effects
+  useEffect(() => {
+    const styleId = 'dynamic-liquid-glass-styles';
+    let existingStyle = document.getElementById(styleId) as HTMLStyleElement;
+    
+    if (!existingStyle) {
+      existingStyle = document.createElement('style');
+      existingStyle.id = styleId;
+      document.head.appendChild(existingStyle);
+    }
+
+    const hoverCSS = config.hoverEnabled && config.hoverEffect !== 'none' ? `
+      .preview-liquid-glass {
+        transition: all ${config.hoverDuration}s ease;
+        cursor: pointer;
+      }
+      
+      .preview-liquid-glass:hover {
+        ${config.hoverEffect === 'lift' ? `
+          transform: translateY(-${config.hoverIntensity * 8}px);
+          box-shadow: 
+            0 ${8 + config.hoverIntensity * 12}px ${32 + config.hoverIntensity * 20}px 0 rgba(31, 38, 135, 0.37),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+        ` : ''}
+        
+        ${config.hoverEffect === 'glow' ? `
+          box-shadow: 
+            0 8px 32px 0 rgba(31, 38, 135, 0.37),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+            0 0 ${config.hoverIntensity * 20}px rgba(255, 255, 255, ${config.hoverIntensity * 0.4});
+        ` : ''}
+        
+        ${config.hoverEffect === 'blur' ? `
+          backdrop-filter: blur(${config.blur * config.hoverIntensity}px) saturate(${config.saturation}%);
+          -webkit-backdrop-filter: blur(${config.blur * config.hoverIntensity}px) saturate(${config.saturation}%);
+        ` : ''}
+        
+        ${config.hoverEffect === 'brightness' ? `
+          filter: brightness(${config.hoverIntensity});
+        ` : ''}
+        
+        ${config.hoverEffect === 'scale' ? `
+          transform: scale(${config.hoverIntensity});
+        ` : ''}
+        
+        ${config.hoverEffect === 'tilt' ? `
+          transform: perspective(1000px) rotateX(${config.hoverIntensity * 5}deg) rotateY(${config.hoverIntensity * 5}deg);
+        ` : ''}
+        
+        ${config.hoverEffect === 'rainbow' ? `
+          background: linear-gradient(
+            45deg,
+            rgba(255, 0, 150, ${config.opacity * config.hoverIntensity * 0.3}) 0%,
+            rgba(0, 204, 255, ${config.opacity * config.hoverIntensity * 0.3}) 25%,
+            rgba(255, 204, 0, ${config.opacity * config.hoverIntensity * 0.3}) 50%,
+            rgba(255, 0, 150, ${config.opacity * config.hoverIntensity * 0.3}) 75%,
+            rgba(0, 204, 255, ${config.opacity * config.hoverIntensity * 0.3}) 100%
+          ) !important;
+          background-size: 400% 400% !important;
+          animation: liquid-glass-rainbow-shift ${config.hoverDuration * 2}s ease infinite !important;
+        ` : ''}
+      }
+
+      /* Cursor Follow Effects */
+      ${config.hoverEffect === 'cursor-follow' ? `
+        .preview-liquid-glass {
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .preview-liquid-glass::after {
+          content: '';
+          position: absolute;
+          top: var(--cursor-y, 50%);
+          left: var(--cursor-x, 50%);
+          width: ${config.hoverIntensity * 100}px;
+          height: ${config.hoverIntensity * 100}px;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, ${config.hoverIntensity * 0.3}) 0%,
+            rgba(255, 255, 255, ${config.hoverIntensity * 0.1}) 50%,
+            transparent 100%
+          );
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity ${config.hoverDuration}s ease;
+          z-index: 20;
+        }
+        
+        .preview-liquid-glass:hover::after {
+          opacity: 1;
+        }
+      ` : ''}
+
+      ${config.hoverEffect === 'cursor-glow' ? `
+        .preview-liquid-glass {
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .preview-liquid-glass::before {
+          content: '';
+          position: absolute;
+          top: var(--cursor-y, 50%);
+          left: var(--cursor-x, 50%);
+          width: ${config.hoverIntensity * 150}px;
+          height: ${config.hoverIntensity * 150}px;
+          background: radial-gradient(
+            circle,
+            rgba(255, 255, 255, ${config.hoverIntensity * 0.4}) 0%,
+            rgba(100, 200, 255, ${config.hoverIntensity * 0.2}) 30%,
+            rgba(255, 100, 200, ${config.hoverIntensity * 0.1}) 60%,
+            transparent 100%
+          );
+          transform: translate(-50%, -50%);
+          border-radius: 50%;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity ${config.hoverDuration}s ease;
+          filter: blur(${config.hoverIntensity * 2}px);
+          animation: liquid-glass-cursor-glow ${config.hoverDuration * 4}s ease-in-out infinite;
+          z-index: 1;
+        }
+        
+        .preview-liquid-glass:hover::before {
+          opacity: 1;
+        }
+      ` : ''}
+
+      ${config.hoverEffect === 'cursor-tilt' ? `
+        .preview-liquid-glass {
+          transform-style: preserve-3d;
+          perspective: 1000px;
+        }
+        
+        .preview-liquid-glass:hover {
+          transform: 
+            perspective(1000px)
+            rotateX(calc((var(--cursor-y, 50) - 50) * ${config.hoverIntensity * 0.3}deg))
+            rotateY(calc((var(--cursor-x, 50) - 50) * ${config.hoverIntensity * 0.3}deg))
+            translateZ(${config.hoverIntensity * 10}px) !important;
+          transition: transform ${config.hoverDuration}s ease;
+        }
+      ` : ''}
+    ` : `
+      .preview-liquid-glass {
+        cursor: default;
+      }
+    `;
+
+    existingStyle.textContent = hoverCSS;
+
+    return () => {
+      if (existingStyle && existingStyle.parentNode) {
+        existingStyle.parentNode.removeChild(existingStyle);
+      }
+    };
+  }, [config]);
   
   const getBackgroundStyle = () => {
     if (isDarkMode) {
@@ -32,20 +237,43 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
 
   const getLiquidGlassStyle = () => {
     // Parse the backgroundColor to extract RGB values and apply opacity
-    const parseRgba = (color: string) => {
-      const match = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
-      if (match) {
-        return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${config.opacity})`;
+    const parseRgba = (color: string, opacity: number) => {
+      // Check if it's already an rgba/rgb color
+      const rgbaMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+      if (rgbaMatch) {
+        return `rgba(${rgbaMatch[1]}, ${rgbaMatch[2]}, ${rgbaMatch[3]}, ${opacity})`;
       }
-      // Fallback for hex colors or other formats
-      return `rgba(255, 255, 255, ${config.opacity})`;
+      
+      // Check if it's a hex color
+      const hexMatch = color.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+      if (hexMatch) {
+        const r = parseInt(hexMatch[1], 16);
+        const g = parseInt(hexMatch[2], 16);
+        const b = parseInt(hexMatch[3], 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      }
+      
+      // Fallback for other formats
+      return `rgba(255, 255, 255, ${opacity})`;
+    };
+
+    const getAnimationStyle = () => {
+      if (!config.animationEnabled || config.animationType === 'none') return {};
+
+      const animationName = `liquid-glass-${config.animationType}`;
+      const animationDuration = `${config.animationDuration}s`;
+      const animationDelay = `${config.animationDelay}s`;
+
+      return {
+        animation: `${animationName} ${animationDuration} ease-in-out ${animationDelay} infinite`,
+      };
     };
 
     return {
       position: 'relative' as const,
       backdropFilter: `blur(${config.blur}px) saturate(${config.saturation}%)`,
       WebkitBackdropFilter: `blur(${config.blur}px) saturate(${config.saturation}%)`,
-      background: parseRgba(config.backgroundColor),
+      background: parseRgba(config.backgroundColor, config.opacity),
       border: `1px solid ${config.borderColor}`,
       borderRadius: `${config.borderRadius}px`,
       padding: `${config.padding}px`,
@@ -54,6 +282,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         inset 0 0 0 1px rgba(255, 255, 255, 0.1)
       `,
       overflow: 'hidden' as const,
+      ...getAnimationStyle(),
     };
   };
 
@@ -87,7 +316,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
               border: `1px solid ${config.borderColor}`,
               cursor: 'pointer',
             }}
-            className="min-h-[44px] px-6 touch-manipulation active:scale-95 transition-transform"
+            className="min-h-[44px] px-6 touch-manipulation active:scale-95 transition-transform preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <span className="text-white font-medium relative z-10 text-sm lg:text-base">Click me</span>
@@ -98,7 +327,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-md mx-auto"
+            className="w-full max-w-md mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
@@ -121,7 +350,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-sm mx-auto"
+            className="w-full max-w-sm mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
@@ -150,7 +379,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-2xl mx-auto"
+            className="w-full max-w-2xl mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
@@ -178,7 +407,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-xs mx-auto h-96"
+            className="w-full max-w-xs mx-auto h-96 preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10 h-full flex flex-col">
@@ -214,7 +443,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-xs mx-auto"
+            className="w-full max-w-xs mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
@@ -243,7 +472,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-sm mx-auto"
+            className="w-full max-w-sm mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
@@ -271,7 +500,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-sm mx-auto"
+            className="w-full max-w-sm mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10 space-y-4">
@@ -300,7 +529,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         
       default: // card
         return (
-          <div style={liquidGlassStyle} className="mx-auto">
+          <div style={liquidGlassStyle} className="mx-auto preview-liquid-glass">
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
               <h3 className="text-lg lg:text-xl font-semibold text-white mb-3">Liquid Glass Card</h3>
@@ -313,6 +542,11 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         );
     }
   };
+
+  const isCursorFollowEffect = config.hoverEnabled && 
+    (config.hoverEffect === 'cursor-follow' || 
+     config.hoverEffect === 'cursor-glow' || 
+     config.hoverEffect === 'cursor-tilt');
 
   return (
     <div className="flex-1 flex flex-col">
@@ -342,6 +576,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       </div>
       
       <div 
+        ref={containerRef}
         className="flex-1 flex items-center justify-center p-4 lg:p-8 transition-all duration-300 relative overflow-auto"
         style={getBackgroundStyle()}
       >
@@ -370,6 +605,13 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         <div className="w-full max-w-sm lg:max-w-none lg:w-auto">
           {getContentByType()}
         </div>
+        
+        {/* Hover instruction overlay */}
+        {config.hoverEnabled && config.hoverEffect !== 'none' && (
+          <div className="absolute bottom-4 right-4 bg-black/50 text-white text-xs px-2 py-1 rounded">
+            {isCursorFollowEffect ? `Move cursor to see ${config.hoverEffect} effect` : `Hover to see ${config.hoverEffect} effect`}
+          </div>
+        )}
       </div>
     </div>
   );

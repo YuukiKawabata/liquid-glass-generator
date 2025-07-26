@@ -7,10 +7,20 @@ export interface LiquidGlassConfig {
   backgroundColor: string;
   borderColor: string;
   padding: number;
+  // Animation settings
+  animationEnabled: boolean;
+  animationType: 'none' | 'float' | 'glow' | 'pulse' | 'shimmer' | 'bounce';
+  animationDuration: number; // in seconds
+  animationDelay: number; // in seconds
+  // Hover effect settings
+  hoverEnabled: boolean;
+  hoverEffect: 'none' | 'lift' | 'glow' | 'blur' | 'brightness' | 'scale' | 'tilt' | 'rainbow' | 'cursor-follow' | 'cursor-glow' | 'cursor-tilt';
+  hoverIntensity: number; // 0.1 to 2.0
+  hoverDuration: number; // transition duration in seconds
   presetId?: string;
 }
 
-export type OutputType = 'css' | 'html' | 'react' | 'vue';
+export type OutputType = 'css' | 'html' | 'react' | 'vue' | 'typescript';
 
 export interface Preset {
   id: string;
