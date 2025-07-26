@@ -1467,6 +1467,8 @@ export function generateCode(config: LiquidGlassConfig, outputType: OutputType):
       return generateVue(config);
     case 'typescript':
       return generateTypeScript(config);
+    case 'tailwindcss':
+      return generateTailwindCSS(config);
     default:
       return generateCSS(config);
   }
@@ -1876,6 +1878,503 @@ export default ${componentName};
  */`.trim();
 }
 
+function generateTailwindCSS(config: LiquidGlassConfig): string {
+  const {
+    blur,
+    opacity,
+    saturation,
+    borderRadius,
+    backgroundColor,
+    borderColor,
+    padding,
+    animationEnabled,
+    animationType,
+    animationDuration,
+    animationDelay,
+    hoverEnabled,
+    hoverEffect,
+    hoverIntensity,
+    hoverDuration,
+  } = config;
+
+  // Convert values to Tailwind CSS classes
+  const getBlurClass = (blurValue: number) => {
+    if (blurValue === 0) return 'backdrop-blur-none';
+    if (blurValue <= 4) return 'backdrop-blur-sm';
+    if (blurValue <= 8) return 'backdrop-blur';
+    if (blurValue <= 12) return 'backdrop-blur-md';
+    if (blurValue <= 16) return 'backdrop-blur-lg';
+    if (blurValue <= 24) return 'backdrop-blur-xl';
+    if (blurValue <= 40) return 'backdrop-blur-2xl';
+    return 'backdrop-blur-3xl';
+  };
+
+  const getOpacityClass = (opacityValue: number) => {
+    const percentage = Math.round(opacityValue * 100);
+    if (percentage <= 5) return 'bg-opacity-5';
+    if (percentage <= 10) return 'bg-opacity-10';
+    if (percentage <= 20) return 'bg-opacity-20';
+    if (percentage <= 25) return 'bg-opacity-25';
+    if (percentage <= 30) return 'bg-opacity-30';
+    if (percentage <= 40) return 'bg-opacity-40';
+    if (percentage <= 50) return 'bg-opacity-50';
+    if (percentage <= 60) return 'bg-opacity-60';
+    if (percentage <= 70) return 'bg-opacity-70';
+    if (percentage <= 75) return 'bg-opacity-75';
+    if (percentage <= 80) return 'bg-opacity-80';
+    if (percentage <= 90) return 'bg-opacity-90';
+    if (percentage <= 95) return 'bg-opacity-95';
+    return 'bg-opacity-100';
+  };
+
+  const getRoundedClass = (radiusValue: number) => {
+    if (radiusValue === 0) return 'rounded-none';
+    if (radiusValue <= 2) return 'rounded-sm';
+    if (radiusValue <= 4) return 'rounded';
+    if (radiusValue <= 6) return 'rounded-md';
+    if (radiusValue <= 8) return 'rounded-lg';
+    if (radiusValue <= 12) return 'rounded-xl';
+    if (radiusValue <= 16) return 'rounded-2xl';
+    if (radiusValue <= 24) return 'rounded-3xl';
+    return 'rounded-full';
+  };
+
+  const getPaddingClass = (paddingValue: number) => {
+    if (paddingValue === 0) return 'p-0';
+    if (paddingValue <= 4) return 'p-1';
+    if (paddingValue <= 8) return 'p-2';
+    if (paddingValue <= 12) return 'p-3';
+    if (paddingValue <= 16) return 'p-4';
+    if (paddingValue <= 20) return 'p-5';
+    if (paddingValue <= 24) return 'p-6';
+    if (paddingValue <= 28) return 'p-7';
+    if (paddingValue <= 32) return 'p-8';
+    if (paddingValue <= 36) return 'p-9';
+    if (paddingValue <= 40) return 'p-10';
+    if (paddingValue <= 44) return 'p-11';
+    if (paddingValue <= 48) return 'p-12';
+    return 'p-16';
+  };
+
+  // Extract color for Tailwind
+  const extractColor = (colorStr: string) => {
+    const rgbaMatch = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (rgbaMatch) {
+      const [, r, g, b] = rgbaMatch;
+      return `rgb(${r} ${g} ${b})`;
+    }
+    return colorStr;
+  };
+
+  // Base Tailwind classes
+  const baseClasses = [
+    'relative',
+    getBlurClass(blur),
+    'backdrop-saturate-150', // Approximate saturation
+    getRoundedClass(borderRadius),
+    getPaddingClass(padding),
+    'border',
+    'shadow-2xl',
+    'overflow-hidden',
+  ];
+
+  // Animation classes
+  const animationClasses = [];
+  if (animationEnabled && animationType !== 'none') {
+    switch (animationType) {
+      case 'float':
+        animationClasses.push('animate-bounce');
+        break;
+      case 'pulse':
+        animationClasses.push('animate-pulse');
+        break;
+      case 'bounce':
+        animationClasses.push('animate-bounce');
+        break;
+      default:
+        animationClasses.push('animate-pulse');
+    }
+  }
+
+  // Hover classes
+  const hoverClasses = [];
+  if (hoverEnabled && hoverEffect !== 'none') {
+    switch (hoverEffect) {
+      case 'lift':
+        hoverClasses.push('hover:-translate-y-2', 'hover:shadow-3xl', 'transition-all', 'duration-300');
+        break;
+      case 'scale':
+        hoverClasses.push('hover:scale-105', 'transition-transform', 'duration-300');
+        break;
+      case 'glow':
+        hoverClasses.push('hover:shadow-2xl', 'hover:shadow-white/20', 'transition-shadow', 'duration-300');
+        break;
+      case 'brightness':
+        hoverClasses.push('hover:brightness-110', 'transition-all', 'duration-300');
+        break;
+      default:
+        hoverClasses.push('hover:brightness-105', 'transition-all', 'duration-300');
+    }
+  }
+
+  // Component-specific classes
+  const componentClasses = getTailwindComponentClasses(config.type);
+
+  const allClasses = [
+    ...baseClasses,
+    ...animationClasses,
+    ...hoverClasses,
+    ...componentClasses,
+  ].join(' ');
+
+  // Custom CSS for advanced effects that Tailwind doesn't cover
+  const customCSS = `
+/* Custom CSS for advanced glassmorphism effects */
+.liquid-glass-tailwind {
+  background: ${extractColor(backgroundColor)};
+  border-color: ${extractColor(borderColor)};
+  ${getOpacityClass(opacity)};
+  backdrop-filter: blur(${blur}px) saturate(${saturation}%);
+  -webkit-backdrop-filter: blur(${blur}px) saturate(${saturation}%);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.liquid-glass-tailwind::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  pointer-events: none;
+}
+
+${hoverEnabled && hoverEffect === 'rainbow' ? `
+.liquid-glass-tailwind:hover {
+  background: linear-gradient(
+    45deg,
+    rgba(255, 0, 150, ${opacity * hoverIntensity * 0.3}) 0%,
+    rgba(0, 204, 255, ${opacity * hoverIntensity * 0.3}) 25%,
+    rgba(255, 204, 0, ${opacity * hoverIntensity * 0.3}) 50%,
+    rgba(255, 0, 150, ${opacity * hoverIntensity * 0.3}) 75%,
+    rgba(0, 204, 255, ${opacity * hoverIntensity * 0.3}) 100%
+  );
+  background-size: 400% 400%;
+  animation: liquid-glass-rainbow-shift ${hoverDuration * 2}s ease infinite;
+}
+
+@keyframes liquid-glass-rainbow-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+` : ''}
+
+${animationEnabled && (animationType === 'glow' || animationType === 'shimmer') ? `
+@keyframes liquid-glass-${animationType} {
+  ${animationType === 'glow' ? `
+  0%, 100% { box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 0 20px rgba(255, 255, 255, 0.3); }
+  ` : `
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+  `}
+}
+
+.liquid-glass-tailwind {
+  animation: liquid-glass-${animationType} ${animationDuration}s ease-in-out ${animationDelay}s infinite;
+}
+` : ''}
+`.trim();
+
+  const htmlExample = getTailwindHTMLExample(config.type, allClasses);
+
+  return `
+<!-- Tailwind CSS Classes -->
+<div class="${allClasses} liquid-glass-tailwind">
+  <!-- Your content here -->
+</div>
+
+<!-- Complete HTML Example: -->
+${htmlExample}
+
+<!-- Required Custom CSS: -->
+<style>
+${customCSS}
+</style>
+
+<!-- 
+Tailwind CSS Configuration:
+Make sure to include these values in your tailwind.config.js:
+
+module.exports = {
+  theme: {
+    extend: {
+      backdropBlur: {
+        'xs': '2px',
+      },
+      backdropSaturate: {
+        '150': '1.5',
+        '200': '2',
+      },
+      boxShadow: {
+        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        '3xl': '0 35px 60px -12px rgba(0, 0, 0, 0.25)',
+      },
+      animation: {
+        'glass-float': 'float 3s ease-in-out infinite',
+        'glass-glow': 'glow 2s ease-in-out infinite alternate',
+      },
+    },
+  },
+  plugins: [],
+}
+
+Tailwind Class Breakdown:
+- ${baseClasses.join('\n- ')}
+${animationClasses.length > 0 ? `- ${animationClasses.join('\n- ')}` : ''}
+${hoverClasses.length > 0 ? `- ${hoverClasses.join('\n- ')}` : ''}
+
+Browser Support:
+✅ Tailwind CSS 3.0+
+✅ backdrop-filter support required
+✅ CSS custom properties support
+-->`.trim();
+}
+
+function getTailwindComponentClasses(type: string): string[] {
+  switch (type) {
+    case 'button':
+      return [
+        'cursor-pointer',
+        'inline-flex',
+        'items-center',
+        'justify-center',
+        'min-h-[44px]',
+        'px-6',
+        'py-3',
+        'text-white',
+        'font-medium',
+        'text-sm',
+        'lg:text-base',
+        'active:scale-95',
+        'transition-transform',
+      ];
+    case 'modal':
+      return [
+        'w-full',
+        'max-w-md',
+        'mx-auto',
+      ];
+    case 'panel':
+      return [
+        'w-full',
+        'max-w-xs',
+        'mx-auto',
+      ];
+    case 'navigation':
+      return [
+        'w-full',
+        'max-w-4xl',
+        'mx-auto',
+      ];
+    case 'sidebar':
+      return [
+        'w-full',
+        'max-w-xs',
+        'mx-auto',
+        'h-96',
+        'flex',
+        'flex-col',
+      ];
+    case 'dropdown':
+      return [
+        'w-full',
+        'max-w-xs',
+        'mx-auto',
+      ];
+    case 'toast':
+      return [
+        'w-full',
+        'max-w-sm',
+        'mx-auto',
+      ];
+    case 'input':
+      return [
+        'w-full',
+        'max-w-sm',
+        'mx-auto',
+      ];
+    default: // card
+      return [
+        'w-full',
+        'max-w-sm',
+        'mx-auto',
+      ];
+  }
+}
+
+function getTailwindHTMLExample(type: string, classes: string): string {
+  switch (type) {
+    case 'button':
+      return `<button class="${classes} liquid-glass-tailwind">
+  <span class="relative z-10">Click me</span>
+</button>`;
+
+    case 'modal':
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <div class="flex justify-between items-center mb-3 lg:mb-4">
+      <h3 class="text-base lg:text-lg font-semibold text-white">Modal Title</h3>
+      <button class="text-white hover:text-gray-300 p-1">✕</button>
+    </div>
+    <p class="text-white/80 text-sm lg:text-base mb-4">
+      This is a modal dialog with liquid glass effect.
+    </p>
+    <div class="flex justify-end gap-2">
+      <button class="px-4 py-2 text-white/80 hover:text-white text-sm lg:text-base">Cancel</button>
+      <button class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded text-sm lg:text-base">Confirm</button>
+    </div>
+  </div>
+</div>`;
+
+    case 'panel':
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <h3 class="text-base lg:text-lg font-semibold text-white mb-3 lg:mb-4">Control Panel</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-white/80 text-sm lg:text-base">Brightness</span>
+        <span class="text-white text-sm lg:text-base">85%</span>
+      </div>
+      <div class="w-full h-2 bg-white/20 rounded-full">
+        <div class="h-full bg-white/60 rounded-full" style="width: 80%;"></div>
+      </div>
+    </div>
+  </div>
+</div>`;
+
+    case 'navigation':
+      return `<nav class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="#" class="text-lg font-semibold text-white">Brand</a>
+        <div class="hidden md:flex gap-4">
+          <a href="#" class="text-white/80 hover:text-white text-sm lg:text-base">Home</a>
+          <a href="#" class="text-white/80 hover:text-white text-sm lg:text-base">About</a>
+          <a href="#" class="text-white/80 hover:text-white text-sm lg:text-base">Contact</a>
+        </div>
+      </div>
+      <button class="md:hidden text-white/80 hover:text-white p-1">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>`;
+
+    case 'sidebar':
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10 h-full flex flex-col">
+    <h3 class="text-lg font-semibold text-white mb-4">Menu</h3>
+    <nav class="flex-1 flex flex-col gap-2">
+      <a href="#" class="flex items-center gap-3 text-white/90 p-2 rounded hover:bg-white/10 text-sm lg:text-base">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+        </svg>
+        <span>Dashboard</span>
+      </a>
+      <a href="#" class="flex items-center gap-3 text-white/80 hover:text-white p-2 rounded text-sm lg:text-base">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </div>
+</div>`;
+
+    case 'dropdown':
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <button class="w-full flex items-center justify-between p-0 bg-transparent border-none text-white">
+      <span class="text-sm lg:text-base">Select an option</span>
+      <svg class="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <div class="mt-3 space-y-1">
+      <div class="p-2 text-white/90 bg-white/10 rounded cursor-pointer text-sm lg:text-base">Option 1</div>
+      <div class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded cursor-pointer text-sm lg:text-base">Option 2</div>
+      <div class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded cursor-pointer text-sm lg:text-base">Option 3</div>
+    </div>
+  </div>
+</div>`;
+
+    case 'toast':
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <div class="flex items-start gap-3">
+      <div class="flex-shrink-0">
+        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-white font-medium text-sm lg:text-base">Success!</h4>
+        <p class="text-white/80 text-xs lg:text-sm mt-1">Your changes have been saved successfully.</p>
+      </div>
+      <button class="text-white/60 hover:text-white p-0">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>`;
+
+    case 'input':
+      return `<form class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10 space-y-4">
+    <div>
+      <label class="block text-white/80 mb-2 text-sm lg:text-base">Email</label>
+      <input type="email" class="w-full p-2 lg:p-3 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:border-white/40 focus:outline-none text-sm lg:text-base" placeholder="Enter your email">
+    </div>
+    <div>
+      <label class="block text-white/80 mb-2 text-sm lg:text-base">Password</label>
+      <input type="password" class="w-full p-2 lg:p-3 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:border-white/40 focus:outline-none text-sm lg:text-base" placeholder="Enter your password">
+    </div>
+    <button type="submit" class="w-full p-3 bg-white/20 hover:bg-white/30 text-white rounded transition-colors text-sm lg:text-base">Sign In</button>
+  </div>
+</form>`;
+
+    default: // card
+      return `<div class="${classes} liquid-glass-tailwind">
+  <div class="relative z-10">
+    <h3 class="text-lg lg:text-xl font-semibold text-white mb-3 lg:mb-4">Liquid Glass Card</h3>
+    <p class="text-white/80 text-sm lg:text-base leading-relaxed">
+      Beautiful glassmorphism effect with backdrop blur and transparency. 
+      Perfect for modern UI designs.
+    </p>
+  </div>
+</div>`;
+  }
+}
+
 export function getOutputOptions() {
   return [
     { value: 'css', label: 'CSS' },
@@ -1883,5 +2382,6 @@ export function getOutputOptions() {
     { value: 'react', label: 'React' },
     { value: 'vue', label: 'Vue' },
     { value: 'typescript', label: 'TypeScript' },
+    { value: 'tailwindcss', label: 'Tailwind CSS' },
   ];
 }

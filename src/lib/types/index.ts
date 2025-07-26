@@ -20,7 +20,7 @@ export interface LiquidGlassConfig {
   presetId?: string;
 }
 
-export type OutputType = 'css' | 'html' | 'react' | 'vue' | 'typescript';
+export type OutputType = 'css' | 'html' | 'react' | 'vue' | 'typescript' | 'tailwindcss';
 
 // Language support types
 export type Language = 'ja' | 'en';

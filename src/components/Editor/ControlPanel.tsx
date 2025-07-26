@@ -51,6 +51,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { value: 'react', label: 'React' },
     { value: 'vue', label: 'Vue' },
     { value: 'typescript', label: 'TypeScript' },
+    { value: 'tailwindcss', label: 'Tailwind CSS' },
   ];
 
   const presetOptions = [
