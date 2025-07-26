@@ -87,9 +87,10 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
               border: `1px solid ${config.borderColor}`,
               cursor: 'pointer',
             }}
+            className="min-h-[44px] px-6 touch-manipulation active:scale-95 transition-transform"
           >
             <div style={getGradientOverlayStyle()}></div>
-            <span className="text-white font-medium relative z-10">Click me</span>
+            <span className="text-white font-medium relative z-10 text-sm lg:text-base">Click me</span>
           </button>
         );
         
@@ -97,20 +98,20 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-md"
+            className="w-full max-w-md mx-auto"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold text-white">Modal Title</h3>
-                <button className="text-white hover:text-gray-300">✕</button>
+              <div className="flex justify-between items-center mb-3 lg:mb-4">
+                <h3 className="text-base lg:text-lg font-semibold text-white">Modal Title</h3>
+                <button className="text-white hover:text-gray-300 p-1 touch-manipulation">✕</button>
               </div>
-              <p className="text-white/80 mb-4">
+              <p className="text-white/80 mb-3 lg:mb-4 text-sm lg:text-base">
                 This is a modal dialog with liquid glass effect. It creates a beautiful frosted glass appearance.
               </p>
               <div className="flex justify-end space-x-2">
-                <button className="px-4 py-2 text-white/80 hover:text-white">Cancel</button>
-                <button className="px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30">Confirm</button>
+                <button className="px-3 lg:px-4 py-2 text-white/80 hover:text-white text-sm lg:text-base touch-manipulation">Cancel</button>
+                <button className="px-3 lg:px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 text-sm lg:text-base touch-manipulation">Confirm</button>
               </div>
             </div>
           </div>
@@ -120,24 +121,24 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-sm"
+            className="w-full max-w-sm mx-auto"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <h3 className="text-lg font-semibold text-white mb-3">Control Panel</h3>
+              <h3 className="text-base lg:text-lg font-semibold text-white mb-3">Control Panel</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-white/80">Brightness</span>
-                  <span className="text-white">85%</span>
+                  <span className="text-white/80 text-sm lg:text-base">Brightness</span>
+                  <span className="text-white text-sm lg:text-base">85%</span>
                 </div>
-                <div className="w-full h-2 bg-white/20 rounded-full">
+                <div className="w-full h-2 bg-white/20 rounded-full touch-manipulation">
                   <div className="w-4/5 h-full bg-white/60 rounded-full"></div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/80">Volume</span>
-                  <span className="text-white">62%</span>
+                  <span className="text-white/80 text-sm lg:text-base">Volume</span>
+                  <span className="text-white text-sm lg:text-base">62%</span>
                 </div>
-                <div className="w-full h-2 bg-white/20 rounded-full">
+                <div className="w-full h-2 bg-white/20 rounded-full touch-manipulation">
                   <div className="w-3/5 h-full bg-white/60 rounded-full"></div>
                 </div>
               </div>
@@ -147,11 +148,11 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         
       default: // card
         return (
-          <div style={liquidGlassStyle}>
+          <div style={liquidGlassStyle} className="mx-auto">
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <h3 className="text-xl font-semibold text-white mb-3">Liquid Glass Card</h3>
-              <p className="text-white/80 leading-relaxed">
+              <h3 className="text-lg lg:text-xl font-semibold text-white mb-3">Liquid Glass Card</h3>
+              <p className="text-white/80 leading-relaxed text-sm lg:text-base">
                 Beautiful glassmorphism effect with backdrop blur and transparency. 
                 Perfect for modern UI designs.
               </p>
@@ -163,16 +164,17 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
 
   return (
     <div className="flex-1 flex flex-col">
-      <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
+      <div className="flex justify-between items-center p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
           Preview
         </h2>
         
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1 lg:space-x-2">
           <Button
             variant={!isDarkMode ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => setIsDarkMode(false)}
+            className="px-2 lg:px-3 py-1 lg:py-2 text-xs lg:text-sm"
           >
             Light
           </Button>
@@ -180,6 +182,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             variant={isDarkMode ? 'primary' : 'ghost'}
             size="sm"
             onClick={() => setIsDarkMode(true)}
+            className="px-2 lg:px-3 py-1 lg:py-2 text-xs lg:text-sm"
           >
             Dark
           </Button>
@@ -187,7 +190,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       </div>
       
       <div 
-        className="flex-1 flex items-center justify-center p-8 transition-all duration-300 relative"
+        className="flex-1 flex items-center justify-center p-4 lg:p-8 transition-all duration-300 relative overflow-auto"
         style={getBackgroundStyle()}
       >
         {/* Texture overlay to make blur more visible */}
@@ -212,7 +215,9 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             `,
           }}
         />
-        {getContentByType()}
+        <div className="w-full max-w-sm lg:max-w-none lg:w-auto">
+          {getContentByType()}
+        </div>
       </div>
     </div>
   );

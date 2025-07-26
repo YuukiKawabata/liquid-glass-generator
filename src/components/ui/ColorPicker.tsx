@@ -61,32 +61,79 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
             type="color"
             value={hexValue}
             onChange={handleColorChange}
-            className="w-12 h-10 rounded-lg border border-gray-300 cursor-pointer"
+            className="w-12 h-12 lg:w-12 lg:h-10 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer touch-manipulation active:scale-95 transition-transform"
           />
         </div>
         
         <div className="flex-1">
-          <div className="flex justify-between items-center mb-1">
-            <span className="text-xs text-gray-500">Transparency</span>
-            <span className="text-xs text-gray-500 font-mono">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-xs text-gray-500 dark:text-gray-400">Transparency</span>
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-mono min-w-[3ch] text-right">
               {Math.round(parseFloat(currentAlpha) * 100)}%
             </span>
           </div>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.05"
-            value={currentAlpha}
-            onChange={handleAlphaChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-          />
+          <div className="py-1">
+            <input
+              type="range"
+              min="0"
+              max="1"
+              step="0.05"
+              value={currentAlpha}
+              onChange={handleAlphaChange}
+              className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer touch-manipulation slider-alpha"
+            />
+          </div>
         </div>
       </div>
       
-      <div className="text-xs font-mono text-gray-500 bg-gray-50 dark:bg-gray-800 p-2 rounded border">
+      <div className="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700 break-all">
         {value}
       </div>
+      
+      <style jsx>{`
+        .slider-alpha::-webkit-slider-thumb {
+          appearance: none;
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: 2px solid #ffffff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+          transition: all 0.15s ease-in-out;
+        }
+        
+        .slider-alpha::-webkit-slider-thumb:hover {
+          transform: scale(1.1);
+        }
+        
+        .slider-alpha::-webkit-slider-thumb:active {
+          transform: scale(1.2);
+        }
+        
+        .slider-alpha::-moz-range-thumb {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          background: #3b82f6;
+          cursor: pointer;
+          border: 2px solid #ffffff;
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+          transition: all 0.15s ease-in-out;
+        }
+        
+        @media (max-width: 1024px) {
+          .slider-alpha::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+          }
+          
+          .slider-alpha::-moz-range-thumb {
+            height: 24px;
+            width: 24px;
+          }
+        }
+      `}</style>
     </div>
   );
 };

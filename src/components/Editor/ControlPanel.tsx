@@ -53,8 +53,8 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   ];
 
   return (
-    <div className="h-full p-6">
-      <div className="space-y-6">
+    <div className="h-full p-4 lg:p-6">
+      <div className="space-y-4 lg:space-y-6">
         <div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Control Panel
@@ -75,7 +75,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           onChange={(type) => onConfigChange({ type: type as LiquidGlassConfig['type'] })}
         />
 
-        <div className="space-y-4">
+        <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
             Visual Properties
           </h3>
@@ -124,7 +124,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
             Colors
           </h3>
@@ -142,7 +142,7 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-4 lg:space-y-4">
           <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
             Output
           </h3>
@@ -155,14 +155,17 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
           />
         </div>
 
-        <Button
-          onClick={onGenerate}
-          loading={isGenerating}
-          variant="primary"
-          fullWidth
-        >
-          Generate Code
-        </Button>
+        <div className="pt-2">
+          <Button
+            onClick={onGenerate}
+            loading={isGenerating}
+            variant="primary"
+            fullWidth
+            className="py-3 lg:py-2"
+          >
+            Generate Code
+          </Button>
+        </div>
       </div>
     </div>
   );
