@@ -1,0 +1,55 @@
+import { Preset } from '@/lib/types';
+
+export const defaultPresets: Preset[] = [
+  {
+    id: 'modern',
+    name: 'Modern Glass',
+    config: {
+      type: 'card',
+      blur: 15,
+      opacity: 0.25,
+      saturation: 180,
+      borderRadius: 12,
+      backgroundColor: 'rgba(255, 255, 255, 0.25)',
+      borderColor: 'rgba(255, 255, 255, 0.3)',
+      padding: 24,
+    },
+    isPublic: true,
+    usageCount: 0,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'subtle',
+    name: 'Subtle Glass',
+    config: {
+      type: 'card',
+      blur: 8,
+      opacity: 0.15,
+      saturation: 120,
+      borderRadius: 8,
+      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+      borderColor: 'rgba(255, 255, 255, 0.2)',
+      padding: 16,
+    },
+    isPublic: true,
+    usageCount: 0,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'bold',
+    name: 'Bold Glass',
+    config: {
+      type: 'card',
+      blur: 25,
+      opacity: 0.4,
+      saturation: 200,
+      borderRadius: 16,
+      backgroundColor: 'rgba(255, 255, 255, 0.4)',
+      borderColor: 'rgba(255, 255, 255, 0.5)',
+      padding: 32,
+    },
+    isPublic: true,
+    usageCount: 0,
+    createdAt: new Date().toISOString(),
+  },
+];
