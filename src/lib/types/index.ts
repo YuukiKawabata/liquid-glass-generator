@@ -1,5 +1,5 @@
 export interface LiquidGlassConfig {
-  type: 'card' | 'button' | 'modal' | 'panel';
+  type: 'card' | 'button' | 'modal' | 'panel' | 'navigation' | 'sidebar' | 'dropdown' | 'toast' | 'input';
   blur: number;
   opacity: number;
   saturation: number;

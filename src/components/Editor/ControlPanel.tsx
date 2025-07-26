@@ -35,6 +35,11 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
     { value: 'button', label: 'Button' },
     { value: 'modal', label: 'Modal' },
     { value: 'panel', label: 'Panel' },
+    { value: 'navigation', label: 'Navigation' },
+    { value: 'sidebar', label: 'Sidebar' },
+    { value: 'dropdown', label: 'Dropdown' },
+    { value: 'toast', label: 'Toast' },
+    { value: 'input', label: 'Input' },
   ];
 
   const outputOptions = [

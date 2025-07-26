@@ -145,6 +145,158 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             </div>
           </div>
         );
+
+      case 'navigation':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-2xl mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <nav className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <h2 className="text-lg font-semibold text-white">Brand</h2>
+                  <div className="hidden md:flex space-x-4">
+                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Home</a>
+                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">About</a>
+                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Services</a>
+                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Contact</a>
+                  </div>
+                </div>
+                <button className="text-white/80 hover:text-white">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+              </nav>
+            </div>
+          </div>
+        );
+
+      case 'sidebar':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-xs mx-auto h-96"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10 h-full flex flex-col">
+              <div className="mb-4">
+                <h3 className="text-lg font-semibold text-white">Menu</h3>
+              </div>
+              <nav className="flex-1 space-y-2">
+                <a href="#" className="flex items-center space-x-3 text-white/90 hover:text-white p-2 rounded">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
+                  </svg>
+                  <span className="text-sm lg:text-base">Dashboard</span>
+                </a>
+                <a href="#" className="flex items-center space-x-3 text-white/80 hover:text-white p-2 rounded">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span className="text-sm lg:text-base">Profile</span>
+                </a>
+                <a href="#" className="flex items-center space-x-3 text-white/80 hover:text-white p-2 rounded">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="text-sm lg:text-base">Settings</span>
+                </a>
+              </nav>
+            </div>
+          </div>
+        );
+
+      case 'dropdown':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-xs mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-3 cursor-pointer">
+                <span className="text-white text-sm lg:text-base">Select an option</span>
+                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <div className="space-y-1">
+                <div className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+                  Option 1
+                </div>
+                <div className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+                  Option 2
+                </div>
+                <div className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+                  Option 3
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'toast':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-sm mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0">
+                  <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-white font-medium text-sm lg:text-base">Success!</h4>
+                  <p className="text-white/80 text-xs lg:text-sm mt-1">Your changes have been saved successfully.</p>
+                </div>
+                <button className="text-white/60 hover:text-white">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'input':
+        return (
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-sm mx-auto"
+          >
+            <div style={getGradientOverlayStyle()}></div>
+            <div className="relative z-10 space-y-4">
+              <div>
+                <label className="block text-white/80 text-sm lg:text-base mb-2">Email</label>
+                <input 
+                  type="email" 
+                  placeholder="Enter your email"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                />
+              </div>
+              <div>
+                <label className="block text-white/80 text-sm lg:text-base mb-2">Password</label>
+                <input 
+                  type="password" 
+                  placeholder="Enter your password"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                />
+              </div>
+              <button className="w-full py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-colors text-sm lg:text-base">
+                Sign In
+              </button>
+            </div>
+          </div>
+        );
         
       default: // card
         return (
