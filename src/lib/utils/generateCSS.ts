@@ -10,6 +10,10 @@ export function generateCSS(config: LiquidGlassConfig): string {
     borderColor,
     textColor,
     padding,
+    width,
+    height,
+    margin,
+    maxWidth,
     animationEnabled,
     animationType,
     animationDuration,
@@ -23,6 +27,86 @@ export function generateCSS(config: LiquidGlassConfig): string {
     glassNoise,
     responsive,
   } = config;
+
+  const baseCSS = `
+.liquid-glass {
+  /* Size and spacing */
+  width: ${width}px;
+  height: ${height}px;
+  max-width: ${maxWidth}px;
+  margin: ${margin}px;
+  padding: ${padding}px;
+  
+  /* Glass morphism */
+  background: ${backgroundColor};
+  backdrop-filter: blur(${blur}px) saturate(${saturation}%);
+  -webkit-backdrop-filter: blur(${blur}px) saturate(${saturation}%);
+  border: ${borderWidth}px solid ${borderColor};
+  border-radius: ${borderRadius}px;
+  
+  /* Text styling */
+  color: ${textColor};
+  
+  /* Shadow */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, ${shadowIntensity * 0.37}),
+    inset 0 1px 0 rgba(255, 255, 255, ${shadowIntensity * 0.2});
+  
+  /* Performance optimization */
+  transform: translateZ(0);
+  will-change: transform;
+  
+  /* Transition */
+  transition: all ${hoverDuration}s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass noise effect */
+${glassNoise ? `
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.liquid-glass > * {
+  position: relative;
+  z-index: 2;
+}
+` : ''}
+
+/* Responsive design */
+${responsive ? `
+@media (max-width: 768px) {
+  .liquid-glass {
+    width: min(${width}px, calc(100vw - 32px));
+    height: auto;
+    min-height: ${Math.max(height * 0.75, 100)}px;
+    margin: ${Math.max(margin * 0.75, 8)}px;
+    padding: ${Math.max(padding * 0.75, 8)}px;
+    border-radius: ${Math.max(borderRadius * 0.75, 4)}px;
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .liquid-glass {
+    width: calc(100vw - 16px);
+    margin: ${Math.max(margin * 0.5, 4)}px;
+    padding: ${Math.max(padding * 0.5, 4)}px;
+    border-radius: ${Math.max(borderRadius * 0.5, 2)}px;
+    font-size: 0.8em;
+  }
+}
+` : ''}`;
 
   // Parse the backgroundColor to extract RGB values and apply opacity
   const parseRgbaWithOpacity = (color: string, opacityValue: number) => {
@@ -279,56 +363,6 @@ ${keyframes[animationType] || ''}
 }`;
   };
 
-  const baseCSS = `
-.liquid-glass {
-  position: relative;
-  backdrop-filter: blur(${blur}px) saturate(${saturation}%);
-  -webkit-backdrop-filter: blur(${blur}px) saturate(${saturation}%);
-  background: ${parseRgbaWithOpacity(backgroundColor, opacity)};
-  border: ${borderWidth}px solid ${borderColor};
-  border-radius: ${borderRadius}px;
-  padding: ${padding}px;
-  color: ${textColor};
-  box-shadow: 
-    0 8px 32px 0 rgba(31, 38, 135, ${shadowIntensity}),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  ${responsive ? `
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .liquid-glass {
-    padding: ${Math.max(padding * 0.75, 8)}px;
-    border-radius: ${Math.max(borderRadius * 0.75, 4)}px;
-  }
-}
-
-.liquid-glass {` : ''}
-}
-
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.1) 0%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  ${glassNoise ? `
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);` : ''}
-  pointer-events: none;
-}`;
-
-  // Add component-specific styles
   const componentSpecificCSS = getComponentSpecificCSS(config.type);
   const animationCSS = getAnimationCSS();
   const hoverCSS = getHoverCSS();

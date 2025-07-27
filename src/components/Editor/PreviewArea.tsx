@@ -273,22 +273,47 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
 
     return {
       position: 'relative' as const,
+      // Size and spacing
+      width: `${config.width}px`,
+      height: `${config.height}px`,
+      maxWidth: config.responsive ? `min(${config.maxWidth}px, calc(100vw - 32px))` : `${config.maxWidth}px`,
+      margin: `${config.margin}px`,
+      // Glass morphism
       backdropFilter: `blur(${config.blur}px) saturate(${config.saturation}%)`,
       WebkitBackdropFilter: `blur(${config.blur}px) saturate(${config.saturation}%)`,
       background: parseRgba(config.backgroundColor, config.opacity),
-      border: `1px solid ${config.borderColor}`,
+      border: `${config.borderWidth}px solid ${config.borderColor}`,
       borderRadius: `${config.borderRadius}px`,
       padding: `${config.padding}px`,
+      // Text styling
+      color: config.textColor,
+      // Shadow
       boxShadow: `
-        0 8px 32px 0 rgba(31, 38, 135, 0.37),
-        inset 0 0 0 1px rgba(255, 255, 255, 0.1)
+        0 8px 32px rgba(0, 0, 0, ${config.shadowIntensity * 0.37}),
+        inset 0 1px 0 rgba(255, 255, 255, ${config.shadowIntensity * 0.2})
       `,
       overflow: 'hidden' as const,
+      // Performance optimization
+      transform: 'translateZ(0)',
+      willChange: 'transform',
+      // Animation
       ...getAnimationStyle(),
     };
   };
 
   const getGradientOverlayStyle = () => {
+    const baseBackground = `linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.05) 100%
+    )`;
+    
+    const glassNoiseBackground = config.glassNoise ? `
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+      ${baseBackground}` : baseBackground;
+
     return {
       content: '""',
       position: 'absolute' as const,
@@ -296,12 +321,9 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       left: 0,
       right: 0,
       bottom: 0,
-      background: `linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.05) 100%
-      )`,
+      background: glassNoiseBackground,
       pointerEvents: 'none' as const,
+      zIndex: 1,
     };
   };
 

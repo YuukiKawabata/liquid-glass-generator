@@ -8,6 +8,11 @@ export interface LiquidGlassConfig {
   borderColor: string;
   textColor: string; // 追加
   padding: number;
+  // Size and spacing
+  width: number; // 新規追加
+  height: number; // 新規追加
+  margin: number; // 新規追加
+  maxWidth: number; // 新規追加
   // Animation settings
   animationEnabled: boolean;
   animationType: 'none' | 'float' | 'glow' | 'pulse' | 'shimmer' | 'bounce';
@@ -43,6 +48,11 @@ export interface Messages {
   saturation: string;
   borderRadius: string;
   padding: string;
+  // Size and spacing
+  width: string; // 新規追加
+  height: string; // 新規追加
+  margin: string; // 新規追加
+  maxWidth: string; // 新規追加
   animationSettings: string;
   enableAnimation: string;
   animationType: string;

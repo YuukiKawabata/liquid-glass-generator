@@ -13,6 +13,11 @@ export const messages: Record<Language, Messages> = {
     saturation: '彩度',
     borderRadius: '角丸',
     padding: 'パディング',
+    // Size and spacing
+    width: '幅',
+    height: '高さ',
+    margin: 'マージン',
+    maxWidth: '最大幅',
     animationSettings: 'アニメーション設定',
     enableAnimation: 'アニメーションを有効にする',
     animationType: 'アニメーションタイプ',
@@ -103,6 +108,11 @@ export const messages: Record<Language, Messages> = {
     saturation: 'Saturation',
     borderRadius: 'Border Radius',
     padding: 'Padding',
+    // Size and spacing
+    width: 'Width',
+    height: 'Height',
+    margin: 'Margin',
+    maxWidth: 'Max Width',
     animationSettings: 'Animation Settings',
     enableAnimation: 'Enable Animation',
     animationType: 'Animation Type',

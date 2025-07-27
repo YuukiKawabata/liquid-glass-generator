@@ -7,6 +7,11 @@ const defaultNewProps = {
   borderWidth: 1,
   glassNoise: false,
   responsive: true,
+  // Size and spacing defaults
+  width: 300,
+  height: 200,
+  margin: 16,
+  maxWidth: 600,
 };
 
 export const defaultPresets: Preset[] = [

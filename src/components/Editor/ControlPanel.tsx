@@ -146,6 +146,50 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
             />
           </div>
 
+          {/* Size & Spacing Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-green-500 rounded-full mr-2"></span>
+              Size & Spacing
+            </h3>
+
+            <Slider
+              label={t.width}
+              value={config.width}
+              min={100}
+              max={800}
+              step={10}
+              onChange={(width) => onConfigChange({ width })}
+            />
+
+            <Slider
+              label={t.height}
+              value={config.height}
+              min={50}
+              max={600}
+              step={10}
+              onChange={(height) => onConfigChange({ height })}
+            />
+
+            <Slider
+              label={t.margin}
+              value={config.margin}
+              min={0}
+              max={100}
+              step={4}
+              onChange={(margin) => onConfigChange({ margin })}
+            />
+
+            <Slider
+              label={t.maxWidth}
+              value={config.maxWidth}
+              min={200}
+              max={1200}
+              step={20}
+              onChange={(maxWidth) => onConfigChange({ maxWidth })}
+            />
+          </div>
+
           {/* Animation Section */}
           <div className="liquid-glass-input p-4 space-y-4">
             <h3 className="text-sm font-semibold text-white/90 flex items-center">
@@ -189,6 +233,77 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
                   max={10}
                   step={0.1}
                   onChange={(animationDuration) => onConfigChange({ animationDuration })}
+                />
+
+                <Slider
+                  label={t.animationDelay}
+                  value={config.animationDelay}
+                  min={0}
+                  max={5}
+                  step={0.1}
+                  onChange={(animationDelay) => onConfigChange({ animationDelay })}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Hover Effects Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-pink-400 to-violet-500 rounded-full mr-2"></span>
+              {t.hoverEffects}
+            </h3>
+
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="hover-enabled"
+                checked={config.hoverEnabled}
+                onChange={(e) => onConfigChange({ hoverEnabled: e.target.checked })}
+                className="w-4 h-4 text-blue-600 bg-white/10 border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="hover-enabled" className="text-sm text-white/80">
+                {t.enableHoverEffects}
+              </label>
+            </div>
+
+            {config.hoverEnabled && (
+              <div className="space-y-3 mt-4">
+                <Select
+                  label={t.hoverEffect}
+                  value={config.hoverEffect}
+                  options={[
+                    { value: 'none', label: t.none },
+                    { value: 'lift', label: t.lift },
+                    { value: 'glow', label: t.glow },
+                    { value: 'blur', label: t.blur },
+                    { value: 'brightness', label: t.brightness },
+                    { value: 'scale', label: t.scale },
+                    { value: 'tilt', label: t.tilt },
+                    { value: 'rainbow', label: t.rainbow },
+                    { value: 'cursor-follow', label: t.cursorFollow },
+                    { value: 'cursor-glow', label: 'Cursor Glow' },
+                    { value: 'cursor-tilt', label: 'Cursor Tilt' },
+                  ]}
+                  onChange={(hoverEffect) => onConfigChange({ hoverEffect: hoverEffect as LiquidGlassConfig['hoverEffect'] })}
+                />
+                
+                <Slider
+                  label={t.hoverIntensity}
+                  value={config.hoverIntensity}
+                  min={0.1}
+                  max={2.0}
+                  step={0.1}
+                  onChange={(hoverIntensity) => onConfigChange({ hoverIntensity })}
+                />
+
+                <Slider
+                  label={t.hoverDuration}
+                  value={config.hoverDuration}
+                  min={0.1}
+                  max={2.0}
+                  step={0.1}
+                  onChange={(hoverDuration) => onConfigChange({ hoverDuration })}
                 />
               </div>
             )}
