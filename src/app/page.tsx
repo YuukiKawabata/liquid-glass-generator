@@ -119,8 +119,11 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Spacer for header margin */}
+      <div className="h-6 lg:h-8"></div>
+
       {/* Main Content */}
-      <main className="h-[calc(100vh-140px)] lg:h-[calc(100vh-120px)] px-4 lg:px-6 pb-4 lg:pb-6">
+      <main className="h-[calc(100vh-188px)] lg:h-[calc(100vh-168px)] px-4 lg:px-6 pb-4 lg:pb-6">
         {/* Desktop Layout */}
         <div className="hidden lg:flex h-full gap-2">
           {/* Left Panel - Controls */}
