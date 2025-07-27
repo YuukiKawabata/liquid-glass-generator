@@ -125,7 +125,7 @@ export default function Home() {
         <div className="hidden lg:flex h-full gap-2">
           {/* Left Panel - Controls */}
           <div 
-            className="liquid-glass overflow-y-auto liquid-animate-in"
+            className="liquid-glass liquid-animate-in"
             style={{ 
               width: `${leftPanelWidth}px`,
               animationDelay: '0.1s',
@@ -180,7 +180,7 @@ export default function Home() {
         {/* Mobile Layout */}
         <div className="lg:hidden h-full">
           {activeTab === 'controls' && (
-            <div className="h-full liquid-glass overflow-y-auto liquid-animate-in">
+            <div className="h-full liquid-glass liquid-animate-in">
               <ControlPanel
                 config={config}
                 outputType={outputType}

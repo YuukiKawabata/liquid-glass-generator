@@ -262,6 +262,31 @@
   animation: liquid-glass-pulse 4s ease-in-out infinite;
 }
 
+/* Improved scrolling for liquid glass containers */
+.liquid-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scroll-behavior: smooth;
+}
+
+.liquid-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.liquid-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.liquid-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  backdrop-filter: blur(4px);
+}
+
+.liquid-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 /* Liquid Glass Panel Resizer */
 .liquid-panel-resizer {
   position: relative;
