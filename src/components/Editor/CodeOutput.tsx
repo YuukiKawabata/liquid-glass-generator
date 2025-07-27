@@ -77,14 +77,15 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex justify-between items-center p-3 lg:p-4 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+      <div className="flex justify-between items-center p-4 lg:p-6 border-b border-white/10">
+        <h2 className="text-lg font-semibold text-white flex items-center">
+          <span className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full mr-2"></span>
           {t.codeOutput}
         </h2>
         
         {generatedCode && (
           <div className="flex items-center space-x-2">
-            <span className="text-xs text-gray-500 uppercase tracking-wide">
+            <span className="text-xs text-white/60 uppercase tracking-wide bg-white/10 px-2 py-1 rounded-md backdrop-blur-4">
               {outputType}
             </span>
             
@@ -131,19 +132,19 @@ export const CodeOutput: React.FC<CodeOutputProps> = ({
       <div className="flex-1 overflow-hidden">
         {generatedCode ? (
           <div className="h-full overflow-auto">
-            <pre className="text-xs lg:text-sm p-3 lg:p-4 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 font-mono leading-relaxed">
+            <pre className="text-xs lg:text-sm p-4 lg:p-6 bg-black/20 backdrop-blur-8 text-white font-mono leading-relaxed">
               <code className={`language-${getLanguageForHighlighting()}`}>
                 {generatedCode.code}
               </code>
             </pre>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-400">
-            <div className="text-center p-4">
-              <svg className="w-10 lg:w-12 h-10 lg:h-12 mx-auto mb-3 lg:mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex items-center justify-center h-full text-white/60">
+            <div className="text-center p-6 liquid-glass-input rounded-xl mx-4">
+              <svg className="w-12 lg:w-16 h-12 lg:h-16 mx-auto mb-4 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
-              <p className="text-sm">{t.generateCodeMessage}</p>
+              <p className="text-sm text-white/80">{t.generateCodeMessage}</p>
             </div>
           </div>
         )}

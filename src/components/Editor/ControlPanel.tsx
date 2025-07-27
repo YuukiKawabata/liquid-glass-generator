@@ -63,233 +63,367 @@ export const ControlPanel: React.FC<ControlPanelProps> = ({
   ];
 
   return (
-    <div className="h-full p-4 lg:p-6">
-      <div className="space-y-4 lg:space-y-6">
-        <div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            {t.controlPanel}
-          </h2>
-        </div>
-
-        <Select
-          label={t.preset}
-          value={config.presetId || ''}
-          options={presetOptions}
-          onChange={handlePresetChange}
-        />
-
-        <Select
-          label={t.componentType}
-          value={config.type}
-          options={typeOptions}
-          onChange={(type) => onConfigChange({ type: type as LiquidGlassConfig['type'] })}
-        />
-
-        <div className="space-y-4 lg:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            {t.visualProperties}
-          </h3>
-
-          <Slider
-            label={t.blur}
-            value={config.blur}
-            min={0}
-            max={50}
-            onChange={(blur) => onConfigChange({ blur })}
-          />
-
-          <Slider
-            label={t.opacity}
-            value={config.opacity}
-            min={0}
-            max={1}
-            step={0.05}
-            onChange={(opacity) => onConfigChange({ opacity })}
-          />
-
-          <Slider
-            label={t.saturation}
-            value={config.saturation}
-            min={50}
-            max={300}
-            step={10}
-            onChange={(saturation) => onConfigChange({ saturation })}
-          />
-
-          <Slider
-            label={t.borderRadius}
-            value={config.borderRadius}
-            min={0}
-            max={50}
-            onChange={(borderRadius) => onConfigChange({ borderRadius })}
-          />
-
-          <Slider
-            label={t.padding}
-            value={config.padding}
-            min={0}
-            max={60}
-            onChange={(padding) => onConfigChange({ padding })}
-          />
-        </div>
-
-        <div className="space-y-4 lg:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            {t.animationSettings}
-          </h3>
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="animation-enabled"
-              checked={config.animationEnabled}
-              onChange={(e) => onConfigChange({ animationEnabled: e.target.checked })}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <label htmlFor="animation-enabled" className="text-sm text-gray-700 dark:text-gray-300">
-              {t.enableAnimation}
-            </label>
+    <div className="h-full flex flex-col">
+      <div className="flex-1 overflow-y-auto liquid-scroll p-4 lg:p-6">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="text-center pb-4">
+            <h2 className="text-lg lg:text-xl font-bold text-white mb-2">
+              {t.controlPanel}
+            </h2>
+            <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
           </div>
 
-          {config.animationEnabled && (
-            <>
-              <Select
-                label={t.animationType}
-                value={config.animationType}
-                options={[
-                  { value: 'none', label: t.none },
-                  { value: 'float', label: t.float },
-                  { value: 'glow', label: t.glow },
-                  { value: 'pulse', label: t.pulse },
-                  { value: 'shimmer', label: t.shimmer },
-                  { value: 'bounce', label: t.bounce },
-                ]}
-                onChange={(animationType) => onConfigChange({ animationType: animationType as LiquidGlassConfig['animationType'] })}
-              />
-
-              <Slider
-                label={t.animationDuration}
-                value={config.animationDuration}
-                min={0.5}
-                max={5}
-                step={0.1}
-                onChange={(animationDuration) => onConfigChange({ animationDuration })}
-              />
-
-              <Slider
-                label={t.animationDelay}
-                value={config.animationDelay}
-                min={0}
-                max={3}
-                step={0.1}
-                onChange={(animationDelay) => onConfigChange({ animationDelay })}
-              />
-            </>
-          )}
-        </div>
-
-        <div className="space-y-4 lg:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            {t.hoverEffects}
-          </h3>
-
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="hover-enabled"
-              checked={config.hoverEnabled}
-              onChange={(e) => onConfigChange({ hoverEnabled: e.target.checked })}
-              className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          {/* Presets Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mr-2"></span>
+              Presets & Type
+            </h3>
+            
+            <Select
+              label={t.preset}
+              value={config.presetId || ''}
+              options={presetOptions}
+              onChange={handlePresetChange}
             />
-            <label htmlFor="hover-enabled" className="text-sm text-gray-700 dark:text-gray-300">
-              {t.enableHoverEffects}
-            </label>
+
+            <Select
+              label={t.componentType}
+              value={config.type}
+              options={typeOptions}
+              onChange={(type) => onConfigChange({ type: type as LiquidGlassConfig['type'] })}
+            />
           </div>
 
-          {config.hoverEnabled && (
-            <>
-              <Select
-                label={t.hoverEffect}
-                value={config.hoverEffect}
-                options={[
-                  { value: 'none', label: t.none },
-                  { value: 'lift', label: t.lift },
-                  { value: 'glow', label: t.glow },
-                  { value: 'blur', label: t.blur },
-                  { value: 'brightness', label: t.brightness },
-                  { value: 'scale', label: t.scale },
-                  { value: 'tilt', label: t.tilt },
-                  { value: 'rainbow', label: t.rainbow },
-                  { value: 'cursor-follow', label: t.cursorFollow },
-                  { value: 'cursor-glow', label: t.cursorGlow },
-                  { value: 'cursor-tilt', label: t.cursorTilt },
-                ]}
-                onChange={(hoverEffect) => onConfigChange({ hoverEffect: hoverEffect as LiquidGlassConfig['hoverEffect'] })}
-              />
+          {/* Visual Properties Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-full mr-2"></span>
+              {t.visualProperties}
+            </h3>
 
-              <Slider
-                label={t.hoverIntensity}
-                value={config.hoverIntensity}
-                min={0.1}
-                max={2.0}
-                step={0.1}
-                onChange={(hoverIntensity) => onConfigChange({ hoverIntensity })}
-              />
+            <Slider
+              label={t.blur}
+              value={config.blur}
+              min={0}
+              max={50}
+              onChange={(blur) => onConfigChange({ blur })}
+            />
 
-              <Slider
-                label={t.hoverDuration}
-                value={config.hoverDuration}
-                min={0.1}
-                max={1.0}
-                step={0.05}
-                onChange={(hoverDuration) => onConfigChange({ hoverDuration })}
+            <Slider
+              label={t.opacity}
+              value={config.opacity}
+              min={0}
+              max={1}
+              step={0.05}
+              onChange={(opacity) => onConfigChange({ opacity })}
+            />
+
+            <Slider
+              label={t.saturation}
+              value={config.saturation}
+              min={50}
+              max={300}
+              step={10}
+              onChange={(saturation) => onConfigChange({ saturation })}
+            />
+
+            <Slider
+              label={t.borderRadius}
+              value={config.borderRadius}
+              min={0}
+              max={50}
+              onChange={(borderRadius) => onConfigChange({ borderRadius })}
+            />
+
+            <Slider
+              label={t.padding}
+              value={config.padding}
+              min={0}
+              max={60}
+              onChange={(padding) => onConfigChange({ padding })}
+            />
+          </div>
+
+          {/* Size & Spacing Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-green-500 rounded-full mr-2"></span>
+              Size & Spacing
+            </h3>
+
+            <Slider
+              label={t.width}
+              value={config.width}
+              min={100}
+              max={800}
+              step={10}
+              onChange={(width) => onConfigChange({ width })}
+            />
+
+            <Slider
+              label={t.height}
+              value={config.height}
+              min={50}
+              max={600}
+              step={10}
+              onChange={(height) => onConfigChange({ height })}
+            />
+
+            <Slider
+              label={t.margin}
+              value={config.margin}
+              min={0}
+              max={100}
+              step={4}
+              onChange={(margin) => onConfigChange({ margin })}
+            />
+
+            <Slider
+              label={t.maxWidth}
+              value={config.maxWidth}
+              min={200}
+              max={1200}
+              step={20}
+              onChange={(maxWidth) => onConfigChange({ maxWidth })}
+            />
+          </div>
+
+          {/* Animation Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full mr-2"></span>
+              {t.animationSettings}
+            </h3>
+
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="animation-enabled"
+                checked={config.animationEnabled}
+                onChange={(e) => onConfigChange({ animationEnabled: e.target.checked })}
+                className="w-4 h-4 text-blue-600 bg-white/10 border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
               />
-            </>
+              <label htmlFor="animation-enabled" className="text-sm text-white/80">
+                {t.enableAnimation}
+              </label>
+            </div>
+
+            {config.animationEnabled && (
+              <div className="space-y-3 mt-4">
+                <Select
+                  label={t.animationType}
+                  value={config.animationType}
+                  options={[
+                    { value: 'none', label: t.none },
+                    { value: 'float', label: t.float },
+                    { value: 'glow', label: t.glow },
+                    { value: 'pulse', label: t.pulse },
+                    { value: 'shimmer', label: t.shimmer },
+                    { value: 'bounce', label: t.bounce },
+                  ]}
+                  onChange={(animationType) => onConfigChange({ animationType: animationType as LiquidGlassConfig['animationType'] })}
+                />
+                
+                <Slider
+                  label={t.animationDuration}
+                  value={config.animationDuration}
+                  min={0.5}
+                  max={10}
+                  step={0.1}
+                  onChange={(animationDuration) => onConfigChange({ animationDuration })}
+                />
+
+                <Slider
+                  label={t.animationDelay}
+                  value={config.animationDelay}
+                  min={0}
+                  max={5}
+                  step={0.1}
+                  onChange={(animationDelay) => onConfigChange({ animationDelay })}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Hover Effects Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-pink-400 to-violet-500 rounded-full mr-2"></span>
+              {t.hoverEffects}
+            </h3>
+
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="hover-enabled"
+                checked={config.hoverEnabled}
+                onChange={(e) => onConfigChange({ hoverEnabled: e.target.checked })}
+                className="w-4 h-4 text-blue-600 bg-white/10 border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="hover-enabled" className="text-sm text-white/80">
+                {t.enableHoverEffects}
+              </label>
+            </div>
+
+            {config.hoverEnabled && (
+              <div className="space-y-3 mt-4">
+                <Select
+                  label={t.hoverEffect}
+                  value={config.hoverEffect}
+                  options={[
+                    { value: 'none', label: t.none },
+                    { value: 'lift', label: t.lift },
+                    { value: 'glow', label: t.glow },
+                    { value: 'blur', label: t.blur },
+                    { value: 'brightness', label: t.brightness },
+                    { value: 'scale', label: t.scale },
+                    { value: 'tilt', label: t.tilt },
+                    { value: 'rainbow', label: t.rainbow },
+                    { value: 'cursor-follow', label: t.cursorFollow },
+                    { value: 'cursor-glow', label: 'Cursor Glow' },
+                    { value: 'cursor-tilt', label: 'Cursor Tilt' },
+                  ]}
+                  onChange={(hoverEffect) => onConfigChange({ hoverEffect: hoverEffect as LiquidGlassConfig['hoverEffect'] })}
+                />
+                
+                <Slider
+                  label={t.hoverIntensity}
+                  value={config.hoverIntensity}
+                  min={0.1}
+                  max={2.0}
+                  step={0.1}
+                  onChange={(hoverIntensity) => onConfigChange({ hoverIntensity })}
+                />
+
+                <Slider
+                  label={t.hoverDuration}
+                  value={config.hoverDuration}
+                  min={0.1}
+                  max={2.0}
+                  step={0.1}
+                  onChange={(hoverDuration) => onConfigChange({ hoverDuration })}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Colors Section */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-orange-400 to-red-500 rounded-full mr-2"></span>
+              {t.colors}
+            </h3>
+
+            <ColorPicker
+              label={t.backgroundColor}
+              value={config.backgroundColor}
+              onChange={(backgroundColor) => onConfigChange({ backgroundColor })}
+            />
+
+            <ColorPicker
+              label={t.borderColor}
+              value={config.borderColor}
+              onChange={(borderColor) => onConfigChange({ borderColor })}
+            />
+
+            <ColorPicker
+              label={t.textColor}
+              value={config.textColor}
+              onChange={(textColor) => onConfigChange({ textColor })}
+            />
+          </div>
+
+          {/* Advanced Settings */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-indigo-400 to-cyan-500 rounded-full mr-2"></span>
+              {t.advancedSettings}
+            </h3>
+
+            <Slider
+              label={t.shadowIntensity}
+              value={config.shadowIntensity}
+              min={0}
+              max={1}
+              step={0.05}
+              onChange={(shadowIntensity) => onConfigChange({ shadowIntensity })}
+            />
+
+            <Slider
+              label={t.borderWidth}
+              value={config.borderWidth}
+              min={0}
+              max={5}
+              step={0.5}
+              onChange={(borderWidth) => onConfigChange({ borderWidth })}
+            />
+
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="glass-noise"
+                checked={config.glassNoise}
+                onChange={(e) => onConfigChange({ glassNoise: e.target.checked })}
+                className="w-4 h-4 text-blue-600 bg-white/10 border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="glass-noise" className="text-sm text-white/80">
+                {t.glassNoise}
+              </label>
+            </div>
+
+            <div className="flex items-center space-x-3">
+              <input
+                type="checkbox"
+                id="responsive"
+                checked={config.responsive}
+                onChange={(e) => onConfigChange({ responsive: e.target.checked })}
+                className="w-4 h-4 text-blue-600 bg-white/10 border border-white/20 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <label htmlFor="responsive" className="text-sm text-white/80">
+                {t.responsive}
+              </label>
+            </div>
+          </div>
+
+          {/* Output Type */}
+          <div className="liquid-glass-input p-4 space-y-4">
+            <h3 className="text-sm font-semibold text-white/90 flex items-center">
+              <span className="w-2 h-2 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mr-2"></span>
+              {t.outputType}
+            </h3>
+            
+            <Select
+              label={t.codeFormat}
+              value={outputType}
+              options={outputOptions}
+              onChange={(type) => onOutputTypeChange(type as OutputType)}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Generate Button - Fixed at bottom */}
+      <div className="flex-shrink-0 p-4 lg:p-6 pt-0">
+        <Button
+          onClick={onGenerate}
+          disabled={isGenerating}
+          className="w-full liquid-glass-button text-white font-semibold py-4 px-6 text-lg liquid-animate-pulse"
+          variant="primary"
+        >
+          {isGenerating ? (
+            <div className="flex items-center justify-center space-x-2">
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+              <span>{t.generating}</span>
+            </div>
+          ) : (
+            <div className="flex items-center justify-center space-x-2">
+              <span className="text-xl">✨</span>
+              <span>{t.generateCode}</span>
+            </div>
           )}
-        </div>
-
-        <div className="space-y-4 lg:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            {t.colors}
-          </h3>
-
-          <ColorPicker
-            label={t.backgroundColor}
-            value={config.backgroundColor}
-            onChange={(backgroundColor) => onConfigChange({ backgroundColor })}
-          />
-
-          <ColorPicker
-            label={t.borderColor}
-            value={config.borderColor}
-            onChange={(borderColor) => onConfigChange({ borderColor })}
-          />
-        </div>
-
-        <div className="space-y-4 lg:space-y-4">
-          <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700 pb-2">
-            {t.output}
-          </h3>
-
-          <Select
-            label={t.framework}
-            value={outputType}
-            options={outputOptions}
-            onChange={(type) => onOutputTypeChange(type as OutputType)}
-          />
-        </div>
-
-        <div className="pt-2 pb-6">
-          <Button
-            onClick={onGenerate}
-            loading={isGenerating}
-            variant="primary"
-            fullWidth
-            className="py-3 lg:py-2"
-          >
-            {t.generateCode}
-          </Button>
-        </div>
+        </Button>
       </div>
     </div>
   );

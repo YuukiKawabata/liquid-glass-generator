@@ -6,7 +6,10 @@ import { messages } from './messages';
 
 interface I18nContextType {
   language: Language;
+  locale: Language; // 追加: localeエイリアス
   setLanguage: (language: Language) => void;
+  switchToEnglish: () => void; // 追加
+  switchToJapanese: () => void; // 追加
   t: Messages;
 }
 
@@ -40,9 +43,22 @@ export const I18nProvider: React.FC<I18nProviderProps> = ({ children }) => {
     localStorage.setItem('liquid-glass-language', newLanguage);
   };
 
+  // 追加: 英語に切り替える関数
+  const switchToEnglish = () => {
+    setLanguage('en');
+  };
+
+  // 追加: 日本語に切り替える関数
+  const switchToJapanese = () => {
+    setLanguage('ja');
+  };
+
   const value: I18nContextType = {
     language,
+    locale: language, // 追加: localeエイリアス
     setLanguage,
+    switchToEnglish, // 追加
+    switchToJapanese, // 追加
     t: messages[language],
   };
 

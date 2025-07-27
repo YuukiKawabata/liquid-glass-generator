@@ -13,6 +13,11 @@ export const messages: Record<Language, Messages> = {
     saturation: '彩度',
     borderRadius: '角丸',
     padding: 'パディング',
+    // Size and spacing
+    width: '幅',
+    height: '高さ',
+    margin: 'マージン',
+    maxWidth: '最大幅',
     animationSettings: 'アニメーション設定',
     enableAnimation: 'アニメーションを有効にする',
     animationType: 'アニメーションタイプ',
@@ -26,9 +31,20 @@ export const messages: Record<Language, Messages> = {
     colors: '色設定',
     backgroundColor: '背景色',
     borderColor: 'ボーダー色',
+    textColor: 'テキスト色',
+    // Advanced settings
+    advancedSettings: '詳細設定',
+    shadowIntensity: 'シャドウの強度',
+    borderWidth: 'ボーダーの幅',
+    glassNoise: 'ガラスノイズ効果',
+    responsive: 'レスポンシブ対応',
+    // Output
     output: '出力',
+    outputType: '出力タイプ',
+    codeFormat: 'コードフォーマット',
     framework: 'フレームワーク',
     generateCode: 'コード生成',
+    generating: '生成中...',
     transparency: '透明度',
 
     // Component types
@@ -92,6 +108,11 @@ export const messages: Record<Language, Messages> = {
     saturation: 'Saturation',
     borderRadius: 'Border Radius',
     padding: 'Padding',
+    // Size and spacing
+    width: 'Width',
+    height: 'Height',
+    margin: 'Margin',
+    maxWidth: 'Max Width',
     animationSettings: 'Animation Settings',
     enableAnimation: 'Enable Animation',
     animationType: 'Animation Type',
@@ -105,9 +126,20 @@ export const messages: Record<Language, Messages> = {
     colors: 'Colors',
     backgroundColor: 'Background Color',
     borderColor: 'Border Color',
+    textColor: 'Text Color',
+    // Advanced settings
+    advancedSettings: 'Advanced Settings',
+    shadowIntensity: 'Shadow Intensity',
+    borderWidth: 'Border Width',
+    glassNoise: 'Glass Noise Effect',
+    responsive: 'Responsive Design',
+    // Output
     output: 'Output',
+    outputType: 'Output Type',
+    codeFormat: 'Code Format',
     framework: 'Framework',
     generateCode: 'Generate Code',
+    generating: 'Generating...',
     transparency: 'Transparency',
 
     // Component types

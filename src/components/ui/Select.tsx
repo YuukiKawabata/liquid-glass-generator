@@ -27,22 +27,46 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div className={`space-y-3 ${className}`}>
       {label && (
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="text-sm font-medium text-white/90">
           {label}
         </label>
       )}
       
-      <select
-        value={value}
-        onChange={handleChange}
-        className="w-full px-3 py-3 lg:py-2 text-sm min-h-[44px] lg:min-h-[auto] border border-gray-300 rounded-lg bg-white dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent touch-manipulation appearance-none cursor-pointer"
-      >
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={handleChange}
+          className="liquid-glass-input w-full px-4 py-3 lg:py-2.5 text-sm min-h-[44px] lg:min-h-[auto] 
+                   text-white/90 placeholder-white/50 appearance-none cursor-pointer 
+                   focus:outline-none focus:ring-2 focus:ring-white/30 focus:bg-white/20
+                   transition-all duration-200 touch-manipulation pr-10"
+        >
+          {options.map((option) => (
+            <option 
+              key={option.value} 
+              value={option.value}
+              className="bg-gray-800 text-white"
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+        
+        {/* Custom dropdown arrow */}
+        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+          <svg 
+            className="w-5 h-5 text-white/60 transition-transform duration-200" 
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
+        
+        {/* Subtle gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent rounded-lg pointer-events-none"></div>
+      </div>
     </div>
   );
 };

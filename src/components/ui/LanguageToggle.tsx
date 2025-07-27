@@ -1,29 +1,39 @@
-import React from 'react';
 import { useI18n } from '@/lib/i18n/context';
-import { Language } from '@/lib/types';
 
-export const LanguageToggle: React.FC = () => {
-  const { language, setLanguage, t } = useI18n();
-
-  const toggleLanguage = () => {
-    const newLanguage: Language = language === 'ja' ? 'en' : 'ja';
-    setLanguage(newLanguage);
-  };
+export const LanguageToggle = () => {
+  const { locale, switchToEnglish, switchToJapanese } = useI18n();
 
   return (
     <div className="relative">
-      <button
-        onClick={toggleLanguage}
-        className="flex items-center space-x-2 px-3 py-2 text-sm bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-        title={t.language}
-      >
-        <span className="text-lg">
-          {language === 'ja' ? '🇯🇵' : '🇺🇸'}
-        </span>
-        <span className="text-gray-700 dark:text-gray-300 font-medium">
-          {language === 'ja' ? 'JP' : 'EN'}
-        </span>
-      </button>
+      <div className="flex items-center bg-white/10 backdrop-blur-8 rounded-xl p-1 border border-white/20 shadow-md">
+        <button
+          onClick={switchToEnglish}
+          className={`
+            px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 min-w-[44px] lg:min-w-[auto]
+            ${locale === 'en' 
+              ? 'bg-white/20 text-white shadow-md border border-white/30 backdrop-blur-8' 
+              : 'text-white/70 hover:text-white hover:bg-white/10'
+            }
+          `}
+        >
+          EN
+        </button>
+        <button
+          onClick={switchToJapanese}
+          className={`
+            px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 min-w-[44px] lg:min-w-[auto]
+            ${locale === 'ja' 
+              ? 'bg-white/20 text-white shadow-md border border-white/30 backdrop-blur-8' 
+              : 'text-white/70 hover:text-white hover:bg-white/10'
+            }
+          `}
+        >
+          JP
+        </button>
+      </div>
+      
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-500/20 rounded-xl blur-xl opacity-0 hover:opacity-100 transition-opacity duration-300 -z-10"></div>
     </div>
   );
 }; 
