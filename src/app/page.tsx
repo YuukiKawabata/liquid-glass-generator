@@ -61,67 +61,75 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="px-4 lg:px-6 py-4">
+    <div className="liquid-bg min-h-screen">
+      {/* Liquid Glass Header */}
+      <header className="relative z-10">
+        <div className="liquid-glass mx-4 mt-4 lg:mx-6 lg:mt-6 p-4 lg:p-6 liquid-animate-in">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-xl lg:text-2xl font-bold text-gray-900 dark:text-white">
+            <div className="space-y-1">
+              <h1 className="text-xl lg:text-3xl font-bold liquid-text-gradient">
                 Liquid Glass Generator
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-sm lg:text-base text-white/80">
                 Create stunning glassmorphism effects with real-time preview
               </p>
             </div>
-            <LanguageToggle />
+            <div className="liquid-glass-button p-2">
+              <LanguageToggle />
+            </div>
           </div>
           
-          {/* Mobile Tab Navigation */}
-          <div className="lg:hidden mt-4">
-            <div className="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-              <button
-                className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  activeTab === 'controls'
-                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300'
-                }`}
-                onClick={() => setActiveTab('controls')}
-              >
-                {t.controlPanel}
-              </button>
-              <button
-                className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  activeTab === 'preview'
-                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300'
-                }`}
-                onClick={() => setActiveTab('preview')}
-              >
-                {t.previewTitle}
-              </button>
-              <button
-                className={`flex-1 px-3 py-2 text-sm font-medium rounded-md transition-colors ${
-                  activeTab === 'code'
-                    ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300'
-                }`}
-                onClick={() => setActiveTab('code')}
-              >
-                {t.codeOutput}
-              </button>
+          {/* Mobile Tab Navigation with Liquid Glass */}
+          <div className="lg:hidden mt-6">
+            <div className="liquid-glass p-1 rounded-xl">
+              <div className="flex space-x-1">
+                <button
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'controls'
+                      ? 'liquid-glass-button text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  onClick={() => setActiveTab('controls')}
+                >
+                  {t.controlPanel}
+                </button>
+                <button
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'preview'
+                      ? 'liquid-glass-button text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  onClick={() => setActiveTab('preview')}
+                >
+                  {t.previewTitle}
+                </button>
+                <button
+                  className={`flex-1 px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    activeTab === 'code'
+                      ? 'liquid-glass-button text-white shadow-lg'
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                  onClick={() => setActiveTab('code')}
+                >
+                  {t.codeOutput}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="h-[calc(100vh-140px)] lg:h-[calc(100vh-88px)] flex">
+      <main className="h-[calc(100vh-140px)] lg:h-[calc(100vh-120px)] flex px-4 lg:px-6 pb-4 lg:pb-6">
         {/* Desktop: Left Panel - Controls */}
         <div className="hidden lg:block">
           <div 
-            className="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto h-full"
-            style={{ width: `${leftPanelWidth}px` }}
+            className="liquid-glass h-full overflow-y-auto liquid-animate-in"
+            style={{ 
+              width: `${leftPanelWidth}px`,
+              animationDelay: '0.1s',
+              animationFillMode: 'both'
+            }}
           >
             <ControlPanel
               config={config}
@@ -133,13 +141,15 @@ export default function Home() {
             />
           </div>
 
-          <PanelResizer onResize={handleLeftPanelResize} />
+          <div className="w-2 flex items-center justify-center liquid-panel-resizer cursor-col-resize">
+            <PanelResizer onResize={handleLeftPanelResize} />
+          </div>
         </div>
 
         {/* Mobile: Tab Content */}
         <div className="lg:hidden flex-1 overflow-hidden">
           {activeTab === 'controls' && (
-            <div className="h-full bg-white dark:bg-gray-800 overflow-y-auto">
+            <div className="h-full liquid-glass overflow-y-auto liquid-animate-in">
               <ControlPanel
                 config={config}
                 outputType={outputType}
@@ -152,13 +162,13 @@ export default function Home() {
           )}
           
           {activeTab === 'preview' && (
-            <div className="h-full">
+            <div className="h-full liquid-animate-in">
               <PreviewArea config={config} />
             </div>
           )}
           
           {activeTab === 'code' && (
-            <div className="h-full bg-white dark:bg-gray-800">
+            <div className="h-full liquid-glass liquid-animate-in">
               <CodeOutput
                 generatedCode={generatedCode}
                 outputType={outputType}
@@ -170,16 +180,28 @@ export default function Home() {
         </div>
 
         {/* Desktop: Right side with Preview and Code */}
-        <div className="hidden lg:flex flex-1 h-full">
-          <div className="flex-1 min-w-0">
+        <div className="hidden lg:flex flex-1 h-full ml-2">
+          <div 
+            className="flex-1 min-w-0 mr-2 liquid-animate-in"
+            style={{ 
+              animationDelay: '0.2s',
+              animationFillMode: 'both'
+            }}
+          >
             <PreviewArea config={config} />
           </div>
           
-          <PanelResizer onResize={handleRightPanelResize} />
+          <div className="w-2 flex items-center justify-center liquid-panel-resizer cursor-col-resize">
+            <PanelResizer onResize={handleRightPanelResize} />
+          </div>
           
           <div 
-            className="border-l border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex flex-col"
-            style={{ width: `${rightPanelWidth}px` }}
+            className="liquid-glass flex flex-col ml-2 liquid-animate-in"
+            style={{ 
+              width: `${rightPanelWidth}px`,
+              animationDelay: '0.3s',
+              animationFillMode: 'both'
+            }}
           >
             <CodeOutput
               generatedCode={generatedCode}

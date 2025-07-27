@@ -53,28 +53,69 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
 
   return (
     <div className={`space-y-3 ${className}`}>
-      <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="text-sm font-medium text-white/90">
         {label}
       </label>
       
-      <div className="flex items-center space-x-3">
-        <div className="relative">
-          <input
-            type="color"
-            value={hexValue}
-            onChange={handleColorChange}
-            className="w-12 h-12 lg:w-12 lg:h-10 rounded-lg border border-gray-300 dark:border-gray-600 cursor-pointer touch-manipulation active:scale-95 transition-transform"
-          />
+      <div className="flex items-center space-x-4">
+        {/* Color preview with liquid glass effect */}
+        <div className="relative group">
+          <div 
+            className="w-14 h-12 lg:w-12 lg:h-10 rounded-xl liquid-glass border-2 border-white/20 overflow-hidden cursor-pointer transition-all duration-200 hover:scale-110 hover:border-white/40"
+            style={{ backgroundColor: hexValue }}
+          >
+            {/* Gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-transparent"></div>
+            
+            {/* Hidden color input */}
+            <input
+              type="color"
+              value={hexValue}
+              onChange={handleColorChange}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            
+            {/* Hover effect ring */}
+            <div className="absolute inset-0 rounded-xl ring-2 ring-white/0 group-hover:ring-white/30 transition-all duration-200"></div>
+          </div>
         </div>
         
+        {/* Alpha slider */}
         <div className="flex-1">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400">{t.transparency}</span>
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-mono min-w-[3ch] text-right">
+            <span className="text-xs text-white/70">{t.transparency}</span>
+            <span className="text-xs text-white/60 font-mono min-w-[3ch] text-right px-2 py-1 bg-white/10 rounded-md backdrop-blur-4">
               {Math.round(parseFloat(currentAlpha) * 100)}%
             </span>
           </div>
-          <div className="py-1">
+          
+          <div className="relative py-2">
+            <div className="relative">
+              {/* Track background with checkerboard pattern for transparency */}
+              <div className="absolute inset-0 h-2 bg-white/10 rounded-full backdrop-blur-4"></div>
+              <div 
+                className="absolute inset-0 h-2 rounded-full"
+                style={{
+                  background: `linear-gradient(90deg, 
+                    transparent 0%, 
+                    ${hexValue} 100%),
+                    repeating-conic-gradient(#ffffff33 0% 25%, transparent 0% 50%) 50% / 8px 8px`
+                }}
+              ></div>
+              
+              {/* Progress track */}
+              <div 
+                className="absolute top-0 left-0 h-2 rounded-full shadow-md transition-all duration-200"
+                style={{ 
+                  width: `${parseFloat(currentAlpha) * 100}%`,
+                  background: `linear-gradient(90deg, transparent, ${value})`
+                }}
+              >
+                {/* Shimmer effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent rounded-full animate-pulse"></div>
+              </div>
+            </div>
+            
             <input
               type="range"
               min="0"
@@ -82,55 +123,100 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
               step="0.05"
               value={currentAlpha}
               onChange={handleAlphaChange}
-              className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer touch-manipulation slider-alpha"
+              className="liquid-slider-alpha w-full h-2 bg-transparent appearance-none cursor-pointer touch-manipulation relative z-10"
             />
           </div>
         </div>
       </div>
       
-      <div className="text-xs font-mono text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-2 rounded border border-gray-200 dark:border-gray-700 break-all">
-        {value}
+      {/* Color value display */}
+      <div className="liquid-glass-input p-3 rounded-lg">
+        <div className="text-xs font-mono text-white/80 break-all leading-relaxed">
+          {value}
+        </div>
       </div>
       
       <style jsx>{`
-        .slider-alpha::-webkit-slider-thumb {
+        .liquid-slider-alpha::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #3b82f6;
+          background: linear-gradient(135deg, #60a5fa, #a855f7);
           cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-          transition: all 0.15s ease-in-out;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.2),
+            0 0 0 0 rgba(96, 165, 250, 0.4);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          backdrop-filter: blur(8px);
         }
         
-        .slider-alpha::-webkit-slider-thumb:hover {
-          transform: scale(1.1);
-        }
-        
-        .slider-alpha::-webkit-slider-thumb:active {
+        .liquid-slider-alpha::-webkit-slider-thumb:hover {
           transform: scale(1.2);
+          box-shadow: 
+            0 6px 20px rgba(0, 0, 0, 0.3),
+            0 0 0 4px rgba(96, 165, 250, 0.2);
+          border-color: rgba(255, 255, 255, 0.7);
         }
         
-        .slider-alpha::-moz-range-thumb {
+        .liquid-slider-alpha::-webkit-slider-thumb:active {
+          transform: scale(1.3);
+          box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.4),
+            0 0 0 6px rgba(96, 165, 250, 0.3);
+        }
+        
+        .liquid-slider-alpha::-moz-range-thumb {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #3b82f6;
+          background: linear-gradient(135deg, #60a5fa, #a855f7);
           cursor: pointer;
-          border: 2px solid #ffffff;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-          transition: all 0.15s ease-in-out;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+          box-shadow: 
+            0 4px 12px rgba(0, 0, 0, 0.2),
+            0 0 0 0 rgba(96, 165, 250, 0.4);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .liquid-slider-alpha::-moz-range-thumb:hover {
+          transform: scale(1.2);
+          box-shadow: 
+            0 6px 20px rgba(0, 0, 0, 0.3),
+            0 0 0 4px rgba(96, 165, 250, 0.2);
+          border-color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .liquid-slider-alpha::-moz-range-thumb:active {
+          transform: scale(1.3);
+          box-shadow: 
+            0 8px 25px rgba(0, 0, 0, 0.4),
+            0 0 0 6px rgba(96, 165, 250, 0.3);
+        }
+        
+        .liquid-slider-alpha::-moz-range-track {
+          background: transparent;
+          border: none;
+        }
+        
+        .liquid-slider-alpha:focus {
+          outline: none;
+        }
+        
+        .liquid-slider-alpha:focus::-webkit-slider-thumb {
+          box-shadow: 
+            0 6px 20px rgba(0, 0, 0, 0.3),
+            0 0 0 4px rgba(96, 165, 250, 0.4);
         }
         
         @media (max-width: 1024px) {
-          .slider-alpha::-webkit-slider-thumb {
+          .liquid-slider-alpha::-webkit-slider-thumb {
             height: 24px;
             width: 24px;
           }
           
-          .slider-alpha::-moz-range-thumb {
+          .liquid-slider-alpha::-moz-range-thumb {
             height: 24px;
             width: 24px;
           }
