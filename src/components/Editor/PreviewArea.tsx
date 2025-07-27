@@ -333,18 +333,13 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
     switch (config.type) {
       case 'button':
         return (
-          <button 
-            style={{
-              ...liquidGlassStyle,
-              background: 'transparent',
-              border: `1px solid ${config.borderColor}`,
-              cursor: 'pointer',
-            }}
-            className="min-h-[44px] px-6 touch-manipulation active:scale-95 transition-transform preview-liquid-glass"
+          <div 
+            style={liquidGlassStyle}
+            className="inline-block preview-liquid-glass cursor-pointer"
           >
             <div style={getGradientOverlayStyle()}></div>
-            <span className="text-white font-medium relative z-10 text-sm lg:text-base">Click me</span>
-          </button>
+            <span className="font-medium relative z-10 text-sm lg:text-base">Click me</span>
+          </div>
         );
         
       case 'modal':
@@ -355,16 +350,16 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <div className="flex justify-between items-center mb-3 lg:mb-4">
-                <h3 className="text-base lg:text-lg font-semibold text-white">Modal Title</h3>
-                <button className="text-white hover:text-gray-300 p-1 touch-manipulation">✕</button>
+              <div className="flex items-center justify-between mb-3 lg:mb-4">
+                <h3 className="text-base lg:text-lg font-semibold">Modal Title</h3>
+                <button className="hover:opacity-70 p-1 touch-manipulation">✕</button>
               </div>
-              <p className="text-white/80 mb-3 lg:mb-4 text-sm lg:text-base">
-                This is a modal dialog with liquid glass effect. It creates a beautiful frosted glass appearance.
+              <p className="opacity-80 mb-3 lg:mb-4 text-sm lg:text-base">
+                This is a sample modal dialog with liquid glass design.
               </p>
-              <div className="flex justify-end space-x-2">
-                <button className="px-3 lg:px-4 py-2 text-white/80 hover:text-white text-sm lg:text-base touch-manipulation">Cancel</button>
-                <button className="px-3 lg:px-4 py-2 bg-white/20 text-white rounded hover:bg-white/30 text-sm lg:text-base touch-manipulation">Confirm</button>
+              <div className="flex justify-end space-x-2 lg:space-x-3">
+                <button className="px-3 lg:px-4 py-2 opacity-80 hover:opacity-100 text-sm lg:text-base touch-manipulation">Cancel</button>
+                <button className="px-3 lg:px-4 py-2 bg-white/20 rounded hover:bg-white/30 text-sm lg:text-base touch-manipulation">Confirm</button>
               </div>
             </div>
           </div>
@@ -374,25 +369,25 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="w-full max-w-sm mx-auto preview-liquid-glass"
+            className="w-full max-w-xs mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <h3 className="text-base lg:text-lg font-semibold text-white mb-3">Control Panel</h3>
+              <h3 className="text-base lg:text-lg font-semibold mb-3">Control Panel</h3>
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="text-white/80 text-sm lg:text-base">Brightness</span>
-                  <span className="text-white text-sm lg:text-base">85%</span>
+                  <span className="opacity-80 text-sm lg:text-base">Brightness</span>
+                  <span className="text-sm lg:text-base">85%</span>
                 </div>
-                <div className="w-full h-2 bg-white/20 rounded-full touch-manipulation">
-                  <div className="w-4/5 h-full bg-white/60 rounded-full"></div>
+                <div className="w-full bg-current/20 rounded-full h-2">
+                  <div className="bg-current h-2 rounded-full w-4/5"></div>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-white/80 text-sm lg:text-base">Volume</span>
-                  <span className="text-white text-sm lg:text-base">62%</span>
+                  <span className="opacity-80 text-sm lg:text-base">Volume</span>
+                  <span className="text-sm lg:text-base">62%</span>
                 </div>
-                <div className="w-full h-2 bg-white/20 rounded-full touch-manipulation">
-                  <div className="w-3/5 h-full bg-white/60 rounded-full"></div>
+                <div className="w-full bg-current/20 rounded-full h-2">
+                  <div className="bg-current h-2 rounded-full w-3/5"></div>
                 </div>
               </div>
             </div>
@@ -409,15 +404,15 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             <div className="relative z-10">
               <nav className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
-                  <h2 className="text-lg font-semibold text-white">Brand</h2>
+                  <h2 className="text-lg font-semibold">Brand</h2>
                   <div className="hidden md:flex space-x-4">
-                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Home</a>
-                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">About</a>
-                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Services</a>
-                    <a href="#" className="text-white/80 hover:text-white text-sm lg:text-base">Contact</a>
+                    <a href="#" className="opacity-80 hover:opacity-100 text-sm lg:text-base">Home</a>
+                    <a href="#" className="opacity-80 hover:opacity-100 text-sm lg:text-base">About</a>
+                    <a href="#" className="opacity-80 hover:opacity-100 text-sm lg:text-base">Services</a>
+                    <a href="#" className="opacity-80 hover:opacity-100 text-sm lg:text-base">Contact</a>
                   </div>
                 </div>
-                <button className="text-white/80 hover:text-white">
+                <button className="opacity-80 hover:opacity-100">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
@@ -436,22 +431,22 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10 h-full flex flex-col">
               <div className="mb-4">
-                <h3 className="text-lg font-semibold text-white">Menu</h3>
+                <h3 className="text-lg font-semibold">Menu</h3>
               </div>
               <nav className="flex-1 space-y-2">
-                <a href="#" className="flex items-center space-x-3 text-white/90 hover:text-white p-2 rounded">
+                <a href="#" className="flex items-center space-x-3 opacity-90 hover:opacity-100 p-2 rounded">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z" />
                   </svg>
                   <span className="text-sm lg:text-base">Dashboard</span>
                 </a>
-                <a href="#" className="flex items-center space-x-3 text-white/80 hover:text-white p-2 rounded">
+                <a href="#" className="flex items-center space-x-3 opacity-80 hover:opacity-100 p-2 rounded">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                   <span className="text-sm lg:text-base">Profile</span>
                 </a>
-                <a href="#" className="flex items-center space-x-3 text-white/80 hover:text-white p-2 rounded">
+                <a href="#" className="flex items-center space-x-3 opacity-80 hover:opacity-100 p-2 rounded">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -471,20 +466,20 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
           >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <div className="flex items-center justify-between mb-3 cursor-pointer">
-                <span className="text-white text-sm lg:text-base">Select an option</span>
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm lg:text-base">Select an option</span>
+                <svg className="w-4 h-4 opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
-              <div className="space-y-1">
-                <div className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+              <div className="mt-2 space-y-1">
+                <div className="p-2 opacity-90 hover:opacity-100 hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
                   Option 1
                 </div>
-                <div className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+                <div className="p-2 opacity-80 hover:opacity-100 hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
                   Option 2
                 </div>
-                <div className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
+                <div className="p-2 opacity-80 hover:opacity-100 hover:bg-white/10 rounded text-sm lg:text-base cursor-pointer">
                   Option 3
                 </div>
               </div>
@@ -499,23 +494,21 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             className="w-full max-w-sm mx-auto preview-liquid-glass"
           >
             <div style={getGradientOverlayStyle()}></div>
-            <div className="relative z-10">
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0">
-                  <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-white font-medium text-sm lg:text-base">Success!</h4>
-                  <p className="text-white/80 text-xs lg:text-sm mt-1">Your changes have been saved successfully.</p>
-                </div>
-                <button className="text-white/60 hover:text-white">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+            <div className="relative z-10 flex items-start space-x-3">
+              <div className="flex-shrink-0 mt-1">
+                <svg className="w-4 h-4 lg:w-5 lg:h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
               </div>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-medium text-sm lg:text-base">Success!</h4>
+                <p className="opacity-80 text-xs lg:text-sm mt-1">Your changes have been saved successfully.</p>
+              </div>
+              <button className="opacity-60 hover:opacity-100">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
           </div>
         );
@@ -529,37 +522,43 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10 space-y-4">
               <div>
-                <label className="block text-white/80 text-sm lg:text-base mb-2">Email</label>
+                <label className="block opacity-80 text-sm lg:text-base mb-2">Email</label>
                 <input 
                   type="email" 
                   placeholder="Enter your email"
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded placeholder-current/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                  style={{ color: 'inherit' }}
                 />
               </div>
               <div>
-                <label className="block text-white/80 text-sm lg:text-base mb-2">Password</label>
+                <label className="block opacity-80 text-sm lg:text-base mb-2">Password</label>
                 <input 
                   type="password" 
                   placeholder="Enter your password"
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white placeholder-white/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded placeholder-current/50 focus:outline-none focus:border-white/40 text-sm lg:text-base"
+                  style={{ color: 'inherit' }}
                 />
               </div>
-              <button className="w-full py-2 bg-white/20 text-white rounded hover:bg-white/30 transition-colors text-sm lg:text-base">
-                Sign In
+              <button className="w-full py-2 bg-white/20 rounded hover:bg-white/30 transition-colors text-sm lg:text-base">
+                Submit
               </button>
             </div>
           </div>
         );
-        
-      default: // card
+
+      case 'card':
+      default:
         return (
-          <div style={liquidGlassStyle} className="mx-auto preview-liquid-glass">
+          <div 
+            style={liquidGlassStyle}
+            className="w-full max-w-md mx-auto preview-liquid-glass"
+          >
             <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
-              <h3 className="text-lg lg:text-xl font-semibold text-white mb-3">Liquid Glass Card</h3>
-              <p className="text-white/80 leading-relaxed text-sm lg:text-base">
-                Beautiful glassmorphism effect with backdrop blur and transparency. 
-                Perfect for modern UI designs.
+              <h3 className="text-lg lg:text-xl font-semibold mb-3">Liquid Glass Card</h3>
+              <p className="opacity-80 leading-relaxed text-sm lg:text-base">
+                This is a beautiful liquid glass card component with blur effects, transparency, and smooth animations. 
+                Perfect for modern web interfaces.
               </p>
             </div>
           </div>
