@@ -13,6 +13,7 @@ export const PanelResizer: React.FC<PanelResizerProps> = ({
   const startX = useRef(0);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
     isDragging.current = true;
     startX.current = e.clientX;
     document.body.style.cursor = 'col-resize';
@@ -40,6 +41,7 @@ export const PanelResizer: React.FC<PanelResizerProps> = ({
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (e.touches.length !== 1) return;
+    e.preventDefault();
     
     isDragging.current = true;
     startX.current = e.touches[0].clientX;
@@ -67,28 +69,33 @@ export const PanelResizer: React.FC<PanelResizerProps> = ({
     <div
       className={`
         group relative w-2 h-full cursor-col-resize select-none touch-manipulation
-        flex items-center justify-center transition-all duration-200
+        flex items-center justify-center transition-all duration-200 hover:w-3
         ${className}
       `}
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
       {/* Background with liquid glass effect */}
-      <div className="absolute inset-0 bg-white/5 group-hover:bg-white/10 backdrop-blur-8 transition-all duration-200"></div>
+      <div className="absolute inset-0 bg-white/5 group-hover:bg-white/15 backdrop-blur-8 transition-all duration-200 rounded-sm"></div>
       
       {/* Resize handle */}
-      <div className="relative z-10 w-1 h-8 group-hover:h-12 transition-all duration-200">
+      <div className="relative z-10 w-1 h-12 group-hover:h-16 transition-all duration-200">
         <div className="w-full h-full bg-white/20 group-hover:bg-white/40 rounded-full backdrop-blur-4 shadow-md group-hover:shadow-lg transition-all duration-200">
           {/* Shimmer effect */}
-          <div className="absolute inset-0 bg-gradient-to-b from-white/20 via-transparent to-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/30 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
       </div>
       
       {/* Hover indicator dots */}
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-        <div className="w-1 h-1 bg-white/60 rounded-full"></div>
-        <div className="w-1 h-1 bg-white/60 rounded-full"></div>
+        <div className="w-0.5 h-0.5 bg-white/60 rounded-full"></div>
+        <div className="w-0.5 h-0.5 bg-white/60 rounded-full"></div>
+        <div className="w-0.5 h-0.5 bg-white/60 rounded-full"></div>
+      </div>
+      
+      {/* Tooltip */}
+      <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+        Drag to resize
       </div>
     </div>
   );

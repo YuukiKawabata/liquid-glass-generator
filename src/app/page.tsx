@@ -51,12 +51,12 @@ export default function Home() {
   };
 
   const handleLeftPanelResize = (deltaX: number) => {
-    const newWidth = Math.max(240, Math.min(500, leftPanelWidth + deltaX));
+    const newWidth = Math.max(280, Math.min(500, leftPanelWidth + deltaX));
     setLeftPanelWidth(newWidth);
   };
 
   const handleRightPanelResize = (deltaX: number) => {
-    const newWidth = Math.max(280, Math.min(600, rightPanelWidth - deltaX));
+    const newWidth = Math.max(320, Math.min(600, rightPanelWidth - deltaX));
     setRightPanelWidth(newWidth);
   };
 
@@ -120,11 +120,12 @@ export default function Home() {
       </header>
 
       {/* Main Content */}
-      <main className="h-[calc(100vh-140px)] lg:h-[calc(100vh-120px)] flex px-4 lg:px-6 pb-4 lg:pb-6">
-        {/* Desktop: Left Panel - Controls */}
-        <div className="hidden lg:block">
+      <main className="h-[calc(100vh-140px)] lg:h-[calc(100vh-120px)] px-4 lg:px-6 pb-4 lg:pb-6">
+        {/* Desktop Layout */}
+        <div className="hidden lg:flex h-full gap-2">
+          {/* Left Panel - Controls */}
           <div 
-            className="liquid-glass h-full overflow-y-auto liquid-animate-in"
+            className="liquid-glass overflow-y-auto liquid-animate-in"
             style={{ 
               width: `${leftPanelWidth}px`,
               animationDelay: '0.1s',
@@ -141,13 +142,43 @@ export default function Home() {
             />
           </div>
 
-          <div className="w-2 flex items-center justify-center liquid-panel-resizer cursor-col-resize">
-            <PanelResizer onResize={handleLeftPanelResize} />
+          {/* Left Resizer */}
+          <PanelResizer onResize={handleLeftPanelResize} />
+
+          {/* Preview Area */}
+          <div 
+            className="flex-1 min-w-0 liquid-animate-in"
+            style={{ 
+              animationDelay: '0.2s',
+              animationFillMode: 'both'
+            }}
+          >
+            <PreviewArea config={config} />
+          </div>
+          
+          {/* Right Resizer */}
+          <PanelResizer onResize={handleRightPanelResize} />
+          
+          {/* Right Panel - Code Output */}
+          <div 
+            className="liquid-glass flex flex-col liquid-animate-in"
+            style={{ 
+              width: `${rightPanelWidth}px`,
+              animationDelay: '0.3s',
+              animationFillMode: 'both'
+            }}
+          >
+            <CodeOutput
+              generatedCode={generatedCode}
+              outputType={outputType}
+              onCopy={handleCopy}
+              config={config}
+            />
           </div>
         </div>
 
-        {/* Mobile: Tab Content */}
-        <div className="lg:hidden flex-1 overflow-hidden">
+        {/* Mobile Layout */}
+        <div className="lg:hidden h-full">
           {activeTab === 'controls' && (
             <div className="h-full liquid-glass overflow-y-auto liquid-animate-in">
               <ControlPanel
@@ -177,39 +208,6 @@ export default function Home() {
               />
             </div>
           )}
-        </div>
-
-        {/* Desktop: Right side with Preview and Code */}
-        <div className="hidden lg:flex flex-1 h-full ml-2">
-          <div 
-            className="flex-1 min-w-0 mr-2 liquid-animate-in"
-            style={{ 
-              animationDelay: '0.2s',
-              animationFillMode: 'both'
-            }}
-          >
-            <PreviewArea config={config} />
-          </div>
-          
-          <div className="w-2 flex items-center justify-center liquid-panel-resizer cursor-col-resize">
-            <PanelResizer onResize={handleRightPanelResize} />
-          </div>
-          
-          <div 
-            className="liquid-glass flex flex-col ml-2 liquid-animate-in"
-            style={{ 
-              width: `${rightPanelWidth}px`,
-              animationDelay: '0.3s',
-              animationFillMode: 'both'
-            }}
-          >
-            <CodeOutput
-              generatedCode={generatedCode}
-              outputType={outputType}
-              onCopy={handleCopy}
-              config={config}
-            />
-          </div>
         </div>
       </main>
     </div>

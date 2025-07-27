@@ -6,6 +6,7 @@ export interface LiquidGlassConfig {
   borderRadius: number;
   backgroundColor: string;
   borderColor: string;
+  textColor: string; // 追加
   padding: number;
   // Animation settings
   animationEnabled: boolean;
@@ -17,6 +18,11 @@ export interface LiquidGlassConfig {
   hoverEffect: 'none' | 'lift' | 'glow' | 'blur' | 'brightness' | 'scale' | 'tilt' | 'rainbow' | 'cursor-follow' | 'cursor-glow' | 'cursor-tilt';
   hoverIntensity: number; // 0.1 to 2.0
   hoverDuration: number; // transition duration in seconds
+  // Advanced settings
+  shadowIntensity: number; // 追加
+  borderWidth: number; // 追加
+  glassNoise: boolean; // 追加
+  responsive: boolean; // 追加
   presetId?: string;
 }
 
@@ -50,9 +56,20 @@ export interface Messages {
   colors: string;
   backgroundColor: string;
   borderColor: string;
+  textColor: string; // 追加
+  // Advanced settings
+  advancedSettings: string; // 追加
+  shadowIntensity: string; // 追加
+  borderWidth: string; // 追加
+  glassNoise: string; // 追加
+  responsive: string; // 追加
+  // Output
   output: string;
+  outputType: string; // 追加
+  codeFormat: string; // 追加
   framework: string;
   generateCode: string;
+  generating: string; // 追加
   transparency: string;
   
   // Component types

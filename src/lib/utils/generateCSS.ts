@@ -8,6 +8,7 @@ export function generateCSS(config: LiquidGlassConfig): string {
     borderRadius,
     backgroundColor,
     borderColor,
+    textColor,
     padding,
     animationEnabled,
     animationType,
@@ -17,6 +18,10 @@ export function generateCSS(config: LiquidGlassConfig): string {
     hoverEffect,
     hoverIntensity,
     hoverDuration,
+    shadowIntensity,
+    borderWidth,
+    glassNoise,
+    responsive,
   } = config;
 
   // Parse the backgroundColor to extract RGB values and apply opacity
@@ -280,13 +285,26 @@ ${keyframes[animationType] || ''}
   backdrop-filter: blur(${blur}px) saturate(${saturation}%);
   -webkit-backdrop-filter: blur(${blur}px) saturate(${saturation}%);
   background: ${parseRgbaWithOpacity(backgroundColor, opacity)};
-  border: 1px solid ${borderColor};
+  border: ${borderWidth}px solid ${borderColor};
   border-radius: ${borderRadius}px;
   padding: ${padding}px;
+  color: ${textColor};
   box-shadow: 
-    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    0 8px 32px 0 rgba(31, 38, 135, ${shadowIntensity}),
     inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   overflow: hidden;
+  ${responsive ? `
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .liquid-glass {
+    padding: ${Math.max(padding * 0.75, 8)}px;
+    border-radius: ${Math.max(borderRadius * 0.75, 4)}px;
+  }
+}
+
+.liquid-glass {` : ''}
 }
 
 .liquid-glass::before {
@@ -301,6 +319,12 @@ ${keyframes[animationType] || ''}
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.05) 100%
   );
+  ${glassNoise ? `
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);` : ''}
   pointer-events: none;
 }`;
 
