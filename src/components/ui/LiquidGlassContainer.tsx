@@ -6,7 +6,7 @@ import { LiquidGlassFilters } from './LiquidGlassFilters';
 interface LiquidGlassContainerProps {
   children: ReactNode;
   className?: string;
-  style?: React.CSSProperties & { [key: string]: any };
+  style?: React.CSSProperties & Record<string, string | number>;
   variant?: 'default' | 'enhanced' | 'preview';
   roundness?: number;
   enableDistortion?: boolean;
@@ -70,11 +70,11 @@ export function LiquidGlassContainer({
           ${className}
         `}
         style={{
-          ...(({
+          ...({
             '--liquid-roundness': `${roundness}px`,
             '--mouse-x': `${mousePosition.x}%`,
             '--mouse-y': `${mousePosition.y}%`,
-          } as any)),
+          } as Record<string, string>),
           borderRadius: `${roundness}px`,
           position: 'relative' as const,
           ...getFilterStyle(),
