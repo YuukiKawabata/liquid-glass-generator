@@ -1443,6 +1443,7 @@ function getHTMLContent(type: string): string {
   </div>`;
 
     default: // card
+      const themeClass = ''; // Default empty theme class
       return `
   <div class="liquid-glass-component">
     <!-- Accent Tint -->
