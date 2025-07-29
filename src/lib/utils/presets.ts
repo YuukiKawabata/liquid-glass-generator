@@ -12,6 +12,9 @@ const defaultNewProps = {
   height: 200,
   margin: 16,
   maxWidth: 600,
+  // Padding defaults
+  paddingX: 24,
+  paddingY: 16,
 };
 
 export const defaultPresets: Preset[] = [

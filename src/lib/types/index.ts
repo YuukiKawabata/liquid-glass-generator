@@ -8,6 +8,8 @@ export interface LiquidGlassConfig {
   borderColor: string;
   textColor: string; // 追加
   padding: number;
+  paddingX: number; // 新規追加
+  paddingY: number; // 新規追加
   // Size and spacing
   width: number; // 新規追加
   height: number; // 新規追加
