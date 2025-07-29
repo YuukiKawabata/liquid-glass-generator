@@ -15,7 +15,7 @@ interface TrueLiquidGlassComponentProps {
   saturation?: number;
   className?: string;
   style?: React.CSSProperties;
-  variant?: 'light' | 'dark';
+  variant?: 'light' | 'dark' | 'auto';
   onClick?: () => void;
 }
 
@@ -98,12 +98,14 @@ export function TrueLiquidGlassComponent({
         ref={componentRef}
         className={`${getComponentClasses()} ${className}`}
         style={{
-          '--roundness': `${roundness}px`,
-          '--anim--hover-time': '400ms',
-          '--anim--hover-ease': 'cubic-bezier(0.25, 1, 0.5, 1)',
-          '--shadow-cuttoff-fix': '2em',
+          ...({
+            '--roundness': `${roundness}px`,
+            '--anim--hover-time': '400ms',
+            '--anim--hover-ease': 'cubic-bezier(0.25, 1, 0.5, 1)',
+            '--shadow-cuttoff-fix': '2em',
+          } as Record<string, string>),
           borderRadius: `${roundness}px`,
-          pointerEvents: 'none',
+          pointerEvents: 'none' as const,
           transition: 'all var(--anim--hover-time) var(--anim--hover-ease)',
           transform: isActive && componentType === 'button' ? 'rotate3d(1, 0, 0, 25deg)' : 'none',
           ...style
