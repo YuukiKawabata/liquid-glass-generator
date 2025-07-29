@@ -26,87 +26,274 @@ export function generateCSS(config: LiquidGlassConfig): string {
     borderWidth,
     glassNoise,
     responsive,
+    paddingX = 24,
+    paddingY = 16,
   } = config;
 
+  // Generate SVG filters for liquid glass distortion effect
+  const svgFilters = `
+<!-- SVG Filters for Liquid Glass Effect -->
+<svg width="0" height="0" style="position: absolute; pointer-events: none;">
+  <defs>
+    <filter id="lg-dist" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="92" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
+      <feDisplacementMap in="SourceGraphic" in2="blurred" scale="230" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+</svg>`;
+
   const baseCSS = `
-.liquid-glass {
-  /* Size and spacing */
-  width: ${width}px;
-  height: ${height}px;
-  max-width: ${maxWidth}px;
-  margin: ${margin}px;
-  padding: ${padding}px;
-  
-  /* Glass morphism */
-  background: ${backgroundColor};
-  backdrop-filter: blur(${blur}px) saturate(${saturation}%);
-  -webkit-backdrop-filter: blur(${blur}px) saturate(${saturation}%);
-  border: ${borderWidth}px solid ${borderColor};
-  border-radius: ${borderRadius}px;
-  
-  /* Text styling */
-  color: ${textColor};
-  
-  /* Shadow */
-  box-shadow: 
-    0 8px 32px rgba(0, 0, 0, ${shadowIntensity * 0.37}),
-    inset 0 1px 0 rgba(255, 255, 255, ${shadowIntensity * 0.2});
-  
-  /* Performance optimization */
-  transform: translateZ(0);
-  will-change: transform;
-  
-  /* Transition */
-  transition: all ${hoverDuration}s cubic-bezier(0.4, 0, 0.2, 1);
+/* CSS Custom Properties for Animation */
+@property --angle-1 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: -75deg;
 }
 
-/* Glass noise effect */
-${glassNoise ? `
-.liquid-glass::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 1;
+@property --angle-2 {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: -45deg;
 }
 
-.liquid-glass > * {
+/* Main Liquid Glass Component */
+.liquid-glass-component {
   position: relative;
+  overflow: hidden;
+  border-radius: ${borderRadius}px;
+  width: fit-content;
+  pointer-events: none;
+  transition: all 400ms cubic-bezier(0.25, 1, 0.5, 1);
+  --roundness: ${borderRadius}px;
+  --anim--hover-time: 400ms;
+  --anim--hover-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --shadow-cuttoff-fix: 2em;
+}
+
+/* Main Glass Element */
+.glassy-component {
+  position: relative;
+  pointer-events: auto;
+  z-index: 3;
+  border-radius: ${borderRadius}px;
+  backdrop-filter: blur(${blur}px);
+  -webkit-backdrop-filter: blur(${blur}px);
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  --border-width: clamp(1px, 0.0625em, 4px);
+  padding: ${paddingY}px ${paddingX}px;
+  overflow: hidden;
+}
+
+/* Light Theme Glass */
+.light-glassy-component {
+  background: linear-gradient(-75deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.05));
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.25em 0.125em -0.125em rgba(0, 0, 0, 0.2),
+    0 0 0.1em 0.25em inset rgba(255, 255, 255, 0.2);
+  color: white;
+  text-shadow: 0em 0.12em 0.05em rgba(0, 0, 0, 0.1);
+}
+
+/* Dark Theme Glass */
+.dark-glassy-component {
+  background: linear-gradient(-75deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.05));
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(254, 254, 254, 0.05),
+    inset 0 -0.125em 0.125em rgba(0, 0, 0, 0.5),
+    0 0.25em 0.125em -0.125em rgba(254, 254, 254, 0.2),
+    0 0 0.1em 0.25em inset rgba(0, 0, 0, 0.2);
+  color: white;
+  text-shadow: 0em 0.12em 0.05em rgba(254, 254, 254, 0.1);
+}
+
+/* Hover Effects */
+.light-glassy-component:hover {
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(0, 0, 0, 0.05),
+    inset 0 -0.125em 0.125em rgba(255, 255, 255, 0.5),
+    0 0.15em 0.05em -0.1em rgba(0, 0, 0, 0.25),
+    0 0 0.05em 0.1em inset rgba(255, 255, 255, 0.5);
+}
+
+.dark-glassy-component:hover {
+  box-shadow:
+    inset 0 0.125em 0.125em rgba(254, 254, 254, 0.05),
+    inset 0 -0.125em 0.125em rgba(0, 0, 0, 0.5),
+    0 0.15em 0.05em -0.1em rgba(254, 254, 254, 0.25),
+    0 0 0.05em 0.1em inset rgba(0, 0, 0, 0.5);
+}
+
+/* Glass Filter Layer */
+.glass-filter {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  filter: url(#lg-dist) saturate(${saturation}%);
+  isolation: isolate;
+  border-radius: ${borderRadius}px;
+}
+
+/* Accent Tint Layer */
+.accent-tint {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+  background-color: ${backgroundColor};
+  border-radius: ${borderRadius}px;
   z-index: 2;
 }
-` : ''}
 
-/* Responsive design */
-${responsive ? `
-@media (max-width: 768px) {
-  .liquid-glass {
-    width: min(${width}px, calc(100vw - 32px));
-    height: auto;
-    min-height: ${Math.max(height * 0.75, 100)}px;
-    margin: ${Math.max(margin * 0.75, 8)}px;
-    padding: ${Math.max(padding * 0.75, 8)}px;
-    border-radius: ${Math.max(borderRadius * 0.75, 4)}px;
-    font-size: 0.9em;
-  }
+/* Rotating Gradient Hover Effect */
+.hover-gradient {
+  position: absolute;
+  inset: 0;
+  opacity: 0.6;
+  background: #e4fbfbb8;
+  border-radius: ${borderRadius}px;
+  z-index: 1;
+  transition: opacity 400ms;
 }
 
-@media (max-width: 480px) {
-  .liquid-glass {
-    width: calc(100vw - 16px);
-    margin: ${Math.max(margin * 0.5, 4)}px;
-    padding: ${Math.max(padding * 0.5, 4)}px;
-    border-radius: ${Math.max(borderRadius * 0.5, 2)}px;
-    font-size: 0.8em;
-  }
+.hover-gradient-inner {
+  position: absolute;
+  inset: 0;
+  border-radius: ${borderRadius}px;
+  mix-blend-mode: lighten;
+  opacity: 0.7;
+  background: conic-gradient(from var(--rotation-angle, -75deg), #e7ffff 0%, ${backgroundColor} 25%, #fff 50%, ${backgroundColor} 75%, #e7ffff 100%);
+  animation: rotate-gradient 4s ease-in-out infinite;
+  pointer-events: none;
+}`;
+
+  // Button-specific styles with complex shadow system (matching liquid-glass-svelte)
+  const buttonStyles = config.type === 'button' ? `
+/* Button Cursor Styles */
+.button-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--roundness);
+  background: transparent;
+  pointer-events: none;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  width: fit-content;
+  cursor: pointer;
+  display: inline-block;
 }
-` : ''}`;
+
+/* Button Active State with 3D Transform */
+.button-wrap:has(.glassy-component:active) {
+  transform: rotate3d(1, 0, 0, 25deg);
+}
+
+/* Button Shadow System */
+.button-shadow {
+  position: absolute;
+  width: calc(100% + var(--shadow-cuttoff-fix));
+  height: calc(100% + var(--shadow-cuttoff-fix));
+  top: calc(0% - var(--shadow-cuttoff-fix) / 2);
+  left: calc(0% - var(--shadow-cuttoff-fix) / 2);
+  filter: blur(clamp(2px, 0.125em, 12px));
+  -webkit-filter: blur(clamp(2px, 0.125em, 12px));
+  overflow: visible;
+  pointer-events: none;
+  transition: filter var(--anim--hover-time) var(--anim--hover-ease);
+  z-index: 0;
+}
+
+/* Light Shadow */
+.light-shadow::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: var(--roundness);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.1));
+  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
+  padding: 0.125em;
+  box-sizing: border-box;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  overflow: visible;
+  opacity: 1;
+}
+
+/* Dark Shadow */
+.dark-shadow::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: var(--roundness);
+  background: linear-gradient(180deg, rgba(254, 254, 254, 0.2), rgba(254, 254, 254, 0.1));
+  width: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  height: calc(100% - var(--shadow-cuttoff-fix) - 0.25em);
+  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+  left: calc(var(--shadow-cuttoff-fix) - 0.875em);
+  padding: 0.125em;
+  box-sizing: border-box;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: all var(--anim--hover-time) var(--anim--hover-ease);
+  overflow: visible;
+  opacity: 1;
+}
+
+/* Button Hover Shadow Animation */
+.liquid-glass-component:has(.glassy-component:hover) .button-shadow {
+  filter: blur(clamp(2px, 0.0625em, 6px));
+  -webkit-filter: blur(clamp(2px, 0.0625em, 6px));
+}
+
+.liquid-glass-component:has(.glassy-component:hover) .button-shadow::after {
+  top: calc(var(--shadow-cuttoff-fix) - 0.875em);
+  opacity: 1;
+}
+
+.liquid-glass-component:has(.glassy-component:active) .button-shadow::after {
+  top: calc(var(--shadow-cuttoff-fix) - 0.5em);
+  opacity: 0.75;
+}
+
+/* Button Hover Scale Effect */
+.glassy-component:hover {
+  transform: scale(0.975);
+  backdrop-filter: blur(0.01em);
+  -webkit-backdrop-filter: blur(0.01em);
+}
+
+/* Button Active Scale Effect */
+.glassy-component:active {
+  transform: scale(0.95);
+}
+` : '';
+
+  // Animation keyframes
+  const animationKeyframes = `
+/* Rotation Animation for Gradient */
+@keyframes rotate-gradient {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Touch Device Optimization */
+@media (hover: none) and (pointer: coarse) {
+  .liquid-glass-component {
+    transform: none !important;
+  }
+  
+  .glassy-component:hover {
+    transform: none !important;
+  }
+}`;
 
   // Parse the backgroundColor to extract RGB values and apply opacity
   const parseRgbaWithOpacity = (color: string, opacityValue: number) => {
@@ -367,7 +554,16 @@ ${keyframes[animationType] || ''}
   const animationCSS = getAnimationCSS();
   const hoverCSS = getHoverCSS();
   
-  return `${baseCSS}${componentSpecificCSS}${animationCSS}${hoverCSS}`.trim();
+  return `${svgFilters}
+
+<style>
+${baseCSS}
+${buttonStyles}
+${animationKeyframes}
+${componentSpecificCSS}
+${animationCSS}
+${hoverCSS}
+</style>`.trim();
 }
 
 function getComponentSpecificCSS(type: string): string {
@@ -377,17 +573,33 @@ function getComponentSpecificCSS(type: string): string {
 
 .liquid-glass-button {
   background: transparent;
+  border: none;
   cursor: pointer;
-  transition: transform 0.1s ease;
+  transition: all 0.2s ease;
   min-height: 44px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 12px 24px;
+  font-family: inherit;
+  text-decoration: none;
+  outline: none;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-glass-button:hover {
+  transform: translateY(-1px);
 }
 
 .liquid-glass-button:active {
-  transform: scale(0.95);
+  transform: translateY(0) scale(0.98);
+}
+
+.liquid-glass-button:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+  outline-offset: 2px;
 }
 
 .liquid-glass-button .content {
@@ -396,11 +608,62 @@ function getComponentSpecificCSS(type: string): string {
   color: white;
   font-weight: 500;
   font-size: 14px;
+  white-space: nowrap;
+}
+
+.liquid-glass-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.liquid-glass-button.loading {
+  pointer-events: none;
+}
+
+.liquid-glass-button.loading .content {
+  opacity: 0.7;
+}
+
+.liquid-glass-button.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: button-spin 1s linear infinite;
+  right: 12px;
+}
+
+@keyframes button-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Size variants */
+.liquid-glass-button.small {
+  min-height: 32px;
+  padding: 6px 16px;
+  font-size: 12px;
+}
+
+.liquid-glass-button.large {
+  min-height: 52px;
+  padding: 16px 32px;
+  font-size: 16px;
 }
 
 @media (min-width: 1024px) {
   .liquid-glass-button .content {
     font-size: 16px;
+  }
+  .liquid-glass-button.small .content {
+    font-size: 14px;
+  }
+  .liquid-glass-button.large .content {
+    font-size: 18px;
   }
 }`;
 
@@ -994,9 +1257,41 @@ function getHTMLContent(type: string): string {
   switch (type) {
     case 'button':
       return `
+  <!-- Primary Button -->
   <button class="liquid-glass liquid-glass-button">
-    <span class="content">Click me</span>
-  </button>`;
+    <span class="content">Primary Action</span>
+  </button>
+  
+  <!-- Secondary Button -->
+  <button class="liquid-glass liquid-glass-button secondary" style="margin-left: 12px;">
+    <span class="content">Secondary</span>
+  </button>
+  
+  <!-- Different Sizes -->
+  <div style="margin-top: 20px;">
+    <button class="liquid-glass liquid-glass-button small">
+      <span class="content">Small</span>
+    </button>
+    
+    <button class="liquid-glass liquid-glass-button" style="margin: 0 12px;">
+      <span class="content">Default</span>
+    </button>
+    
+    <button class="liquid-glass liquid-glass-button large">
+      <span class="content">Large</span>
+    </button>
+  </div>
+  
+  <!-- State Examples -->
+  <div style="margin-top: 20px;">
+    <button class="liquid-glass liquid-glass-button disabled">
+      <span class="content">Disabled</span>
+    </button>
+    
+    <button class="liquid-glass liquid-glass-button loading" style="margin-left: 12px;">
+      <span class="content">Loading</span>
+    </button>
+  </div>`;
 
     case 'modal':
       return `
@@ -1149,14 +1444,23 @@ function getHTMLContent(type: string): string {
 
     default: // card
       return `
-  <div class="liquid-glass liquid-glass-card">
-    <div class="content">
-      <h3 class="title">Liquid Glass Card</h3>
-      <p class="description">
-        Beautiful glassmorphism effect with backdrop blur and transparency. 
-        Perfect for modern UI designs.
-      </p>
+  <div class="liquid-glass-component">
+    <!-- Accent Tint -->
+    <div class="accent-tint"></div>
+    
+    <!-- Main Card -->
+    <div class="glassy-component ${themeClass}" style="max-width: 28rem; margin: 0 auto;">
+      <div style="position: relative; z-index: 10;">
+        <h3 style="font-size: 18px; font-weight: 600; color: white; margin: 0 0 12px 0;">Liquid Glass Card</h3>
+        <p style="color: rgba(255, 255, 255, 0.8); line-height: 1.6; margin: 0; font-size: 14px;">
+          This is a beautiful liquid glass card component with blur effects, transparency, and smooth animations. 
+          Perfect for modern web interfaces.
+        </p>
+      </div>
     </div>
+    
+    <!-- Glass Filter Layer -->
+    <div class="glass-filter"></div>
   </div>`;
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { LiquidGlassConfig } from '@/lib/types';
 import { Button } from '@/components/ui/Button';
+import { TrueLiquidGlassComponent } from '@/components/ui/TrueLiquidGlassComponent';
 import { useI18n } from '@/lib/i18n/context';
 
 interface PreviewAreaProps {
@@ -65,6 +66,45 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       existingStyle.id = styleId;
       document.head.appendChild(existingStyle);
     }
+
+    // Base styles for all components
+    const baseCSS = `
+      /* Button-specific styles */
+      .liquid-glass-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        font-family: inherit;
+        text-decoration: none;
+        outline: none;
+        user-select: none;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .liquid-glass-button:hover {
+        transform: translateY(-1px);
+      }
+
+      .liquid-glass-button:active {
+        transform: translateY(0) scale(0.98);
+      }
+
+      .liquid-glass-button .content {
+        position: relative;
+        z-index: 10;
+        color: ${config.textColor};
+        font-weight: 500;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+    `;
 
     const hoverCSS = config.hoverEnabled && config.hoverEffect !== 'none' ? `
       .preview-liquid-glass {
@@ -207,7 +247,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       }
     `;
 
-    existingStyle.textContent = hoverCSS;
+    existingStyle.textContent = baseCSS + hoverCSS;
 
     return () => {
       if (existingStyle && existingStyle.parentNode) {
@@ -238,6 +278,17 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
   };
 
   const getLiquidGlassStyle = () => {
+    // True liquid glass style matching liquid-glass-svelte
+    const baseStyle = {
+      position: 'relative' as const,
+      overflow: 'hidden' as const,
+      borderRadius: `${config.borderRadius}px`,
+      background: 'transparent',
+      pointerEvents: 'none' as const,
+      transition: 'all 400ms cubic-bezier(0.25, 1, 0.5, 1)',
+      width: 'fit-content' as const,
+    };
+
     // Parse the backgroundColor to extract RGB values and apply opacity
     const parseRgba = (color: string, opacity: number) => {
       // Check if it's already an rgba/rgb color
@@ -335,20 +386,27 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
         return (
           <div 
             style={liquidGlassStyle}
-            className="inline-block preview-liquid-glass cursor-pointer"
+            className="liquid-glass liquid-glass-button preview-liquid-glass inline-block"
           >
             <div style={getGradientOverlayStyle()}></div>
-            <span className="font-medium relative z-10 text-sm lg:text-base">Click me</span>
+            <span className="content">Click me</span>
           </div>
         );
         
       case 'modal':
         return (
-          <div 
-            style={liquidGlassStyle}
-            className="w-full max-w-md mx-auto preview-liquid-glass"
+          <TrueLiquidGlassComponent
+            componentType="modal"
+            accentColor={config.backgroundColor}
+            roundness={config.borderRadius}
+            paddingX={config.paddingX}
+            paddingY={config.paddingY}
+            blur={config.blur}
+            opacity={config.opacity}
+            saturation={config.saturation}
+            variant={isDarkMode ? 'dark' : 'light'}
+            className="w-full max-w-md mx-auto"
           >
-            <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-3 lg:mb-4">
                 <h3 className="text-base lg:text-lg font-semibold">Modal Title</h3>
@@ -362,16 +420,23 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
                 <button className="px-3 lg:px-4 py-2 bg-white/20 rounded hover:bg-white/30 text-sm lg:text-base touch-manipulation">Confirm</button>
               </div>
             </div>
-          </div>
+          </TrueLiquidGlassComponent>
         );
         
       case 'panel':
         return (
-          <div 
-            style={liquidGlassStyle}
-            className="w-full max-w-xs mx-auto preview-liquid-glass"
+          <TrueLiquidGlassComponent
+            componentType="panel"
+            accentColor={config.backgroundColor}
+            roundness={config.borderRadius}
+            paddingX={config.paddingX}
+            paddingY={config.paddingY}
+            blur={config.blur}
+            opacity={config.opacity}
+            saturation={config.saturation}
+            variant={isDarkMode ? 'dark' : 'light'}
+            className="w-full max-w-xs mx-auto"
           >
-            <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
               <h3 className="text-base lg:text-lg font-semibold mb-3">Control Panel</h3>
               <div className="space-y-3">
@@ -391,16 +456,23 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
                 </div>
               </div>
             </div>
-          </div>
+          </TrueLiquidGlassComponent>
         );
 
       case 'navigation':
         return (
-          <div 
-            style={liquidGlassStyle}
-            className="w-full max-w-2xl mx-auto preview-liquid-glass"
+          <TrueLiquidGlassComponent
+            componentType="navigation"
+            accentColor={config.backgroundColor}
+            roundness={config.borderRadius}
+            paddingX={config.paddingX}
+            paddingY={config.paddingY}
+            blur={config.blur}
+            opacity={config.opacity}
+            saturation={config.saturation}
+            variant={isDarkMode ? 'dark' : 'light'}
+            className="w-full max-w-2xl mx-auto"
           >
-            <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
               <nav className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -419,16 +491,23 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
                 </button>
               </nav>
             </div>
-          </div>
+          </TrueLiquidGlassComponent>
         );
 
       case 'sidebar':
         return (
-          <div 
-            style={liquidGlassStyle}
-            className="w-full max-w-xs mx-auto h-96 preview-liquid-glass"
+          <TrueLiquidGlassComponent
+            componentType="sidebar"
+            accentColor={config.backgroundColor}
+            roundness={config.borderRadius}
+            paddingX={config.paddingX}
+            paddingY={config.paddingY}
+            blur={config.blur}
+            opacity={config.opacity}
+            saturation={config.saturation}
+            variant={isDarkMode ? 'dark' : 'light'}
+            className="w-full max-w-xs mx-auto h-96"
           >
-            <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10 h-full flex flex-col">
               <div className="mb-4">
                 <h3 className="text-lg font-semibold">Menu</h3>
@@ -455,7 +534,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
                 </a>
               </nav>
             </div>
-          </div>
+          </TrueLiquidGlassComponent>
         );
 
       case 'dropdown':
@@ -549,11 +628,18 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
       case 'card':
       default:
         return (
-          <div 
-            style={liquidGlassStyle}
-            className="w-full max-w-md mx-auto preview-liquid-glass"
+          <TrueLiquidGlassComponent
+            componentType="card"
+            accentColor={config.backgroundColor}
+            roundness={config.borderRadius}
+            paddingX={config.paddingX}
+            paddingY={config.paddingY}
+            blur={config.blur}
+            opacity={config.opacity}
+            saturation={config.saturation}
+            variant={isDarkMode ? 'dark' : 'light'}
+            className="w-full max-w-md mx-auto"
           >
-            <div style={getGradientOverlayStyle()}></div>
             <div className="relative z-10">
               <h3 className="text-lg lg:text-xl font-semibold mb-3">Liquid Glass Card</h3>
               <p className="opacity-80 leading-relaxed text-sm lg:text-base">
@@ -561,7 +647,7 @@ export const PreviewArea: React.FC<PreviewAreaProps> = ({ config }) => {
                 Perfect for modern web interfaces.
               </p>
             </div>
-          </div>
+          </TrueLiquidGlassComponent>
         );
     }
   };
