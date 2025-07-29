@@ -55,12 +55,14 @@ export function TrueLiquidGlassButton({
         ref={buttonRef}
         className={`true-liquid-glass-button relative overflow-hidden ${className}`}
         style={{
-          '--roundness': `${roundness}px`,
-          '--anim--hover-time': '400ms',
-          '--anim--hover-ease': 'cubic-bezier(0.25, 1, 0.5, 1)',
+          ...({
+            '--roundness': `${roundness}px`,
+            '--anim--hover-time': '400ms',
+            '--anim--hover-ease': 'cubic-bezier(0.25, 1, 0.5, 1)',
+          } as Record<string, string>),
           borderRadius: `${roundness}px`,
-          width: 'fit-content',
-          pointerEvents: 'none',
+          width: 'fit-content' as const,
+          pointerEvents: 'none' as const,
           transition: 'all var(--anim--hover-time) var(--anim--hover-ease)',
           transform: isActive ? 'rotate3d(1, 0, 0, 25deg)' : 'none'
         }}
@@ -124,7 +126,9 @@ export function TrueLiquidGlassButton({
             transition: 'all var(--anim--hover-time) var(--anim--hover-ease)',
             transform: isHovering ? 'scale(0.975)' : 'scale(1)',
             opacity: disabled ? 0.6 : 1,
-            '--border-width': 'clamp(1px, 0.0625em, 4px)'
+            ...({
+              '--border-width': 'clamp(1px, 0.0625em, 4px)'
+            } as Record<string, string>)
           }}
         >
           <span
@@ -152,7 +156,9 @@ export function TrueLiquidGlassButton({
         <div 
           className={`button-shadow absolute ${isDark ? 'dark-shadow' : 'light-shadow'}`}
           style={{
-            '--shadow-cuttoff-fix': '2em',
+            ...({
+              '--shadow-cuttoff-fix': '2em'
+            } as Record<string, string>),
             width: 'calc(100% + var(--shadow-cuttoff-fix))',
             height: 'calc(100% + var(--shadow-cuttoff-fix))',
             top: 'calc(0% - var(--shadow-cuttoff-fix) / 2)',
